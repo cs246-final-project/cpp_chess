@@ -8,7 +8,7 @@ using namespace std;
 
 class History {
   vector<unique_ptr<HistoryComponent>> history;
-  public:
+public:
     void undo();
     void AddMove(vector<int> from, vector<int> to);
 };
