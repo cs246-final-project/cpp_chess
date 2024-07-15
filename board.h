@@ -9,7 +9,6 @@ const int boardLength = 8;
 
 class Board {
 	Piece* b[boardWidth][boardLength];
-	Piece* takenPieces [32];
 
 	public:
 		Piece* pieceAt(int x, int y);
