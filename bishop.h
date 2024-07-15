@@ -1,8 +1,8 @@
 #ifndef BISHOP_H
 #define BISHOP_H
-#include "piece.h"
+#include "pieceDecorator.h"
 
-class Bishop : public Piece {
+class Bishop : public PieceDecorator {
 
 };
 

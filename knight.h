@@ -1,8 +1,8 @@
 #ifndef KNIGHT_H
 #define KNIGHT_H
-#include "piece.h"
+#include "pieceDecorator.h"
 
-class Knight : public Piece {
+class Knight : public PieceDecorator {
 
 };
 

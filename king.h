@@ -1,8 +1,8 @@
 #ifndef KING_H
 #define KING_H
-#include "piece.h"
+#include "pieceDecorator.h"
 
-class King : public Piece {
+class King : public PieceDecorator {
 
 };
 
