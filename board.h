@@ -8,13 +8,13 @@ const int boardWidth = 8;
 const int boardLength = 8;
 
 class Board {
-    Piece* b[boardWidth][boardLength];
-    Piece* takenPieces [32];
+	Piece* b[boardWidth][boardLength];
+	Piece* takenPieces [32];
 
-    public:
-        Piece* pieceAt(int x, int y);
-        bool movePiece(int x, int y, int toX, int toY);
-        bool movePiece(int x, int y, int toX, int toY, char promotion);
+	public:
+		Piece* pieceAt(int x, int y);
+		bool movePiece(int x, int y, int toX, int toY);
+		bool movePiece(int x, int y, int toX, int toY, char promotion);
 
 };
 

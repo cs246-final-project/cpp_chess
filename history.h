@@ -3,11 +3,14 @@
 #include "piece.h"
 #include "historyComponent.h"
 #include <vector>
+#include <memory>
+using namespace std;
 
 class History {
-    std::vector<Piece*> history;
-    public:
-        HistoryComponent pop();
+  vector<unique_ptr<HistoryComponent>> history;
+  public:
+    void undo();
+    void AddMove(vector<int> from, vector<int> to);
 };
 
 #endif
