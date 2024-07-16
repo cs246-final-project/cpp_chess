@@ -1,8 +1,8 @@
 #ifndef QUEEN_H
 #define QUEEN_H
-#include "pieceDecorator.h"
+#include "piece.h"
 
-class Queen : public PieceDecorator {
+class Queen : public Piece {
 
 };
 

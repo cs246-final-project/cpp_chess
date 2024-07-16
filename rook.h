@@ -1,8 +1,8 @@
 #ifndef ROOK_H
 #define ROOK_H
-#include "pieceDecorator.h"
+#include "piece.h"
 
-class Rook : public PieceDecorator {
+class Rook : public Piece {
 
 };
 
