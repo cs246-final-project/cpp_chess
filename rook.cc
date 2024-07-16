@@ -2,6 +2,10 @@
 
 Rook::Rook(const bool isWhite) : Piece{isWhite, 50}, didFirstMove{false} {}
 
+bool Rook::getDidFirstMove() {
+  return didFirstMove;
+}
+
 void Rook::setDidFirstMove() {
   didFirstMove = true;
 }
