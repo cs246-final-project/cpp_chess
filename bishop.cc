@@ -1,6 +1,8 @@
 #include "bishop.h"
 
-Bishop::Bishop(const bool isWhite) : Piece(isWhite, 30) {};
+int bishopPoint = 30;
+
+Bishop::Bishop(const bool isWhite) : Piece(isWhite, bishopPoint) {};
 
 // Check if the move is legal for the Bishop
 // all current and to should be guaranteed to be in the board

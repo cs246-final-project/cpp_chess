@@ -1,6 +1,8 @@
 #include "queen.h"
 
-Queen::Queen(const bool isWhite): Piece(isWhite, 9) {}
+int queenPoint = 90;
+
+Queen::Queen(const bool isWhite): Piece(isWhite, queenPoint) {}
 
 // Check if the move is legal for the Queen
 // all current and to should be guaranteed to be in the board

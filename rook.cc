@@ -1,6 +1,8 @@
 #include "rook.h"
 
-Rook::Rook(const bool isWhite) : Piece{isWhite, 50}, didFirstMove{false} {}
+int rookPoint = 50;
+
+Rook::Rook(const bool isWhite) : Piece{isWhite, rookPoint}, didFirstMove{false} {}
 
 bool Rook::getDidFirstMove() {
   return didFirstMove;
