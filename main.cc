@@ -93,8 +93,52 @@ int main() {
       string arg1, arg2;
       while(setupMode && cin >> command){
         if(command == "+"){
-          cin >> arg1 >> arg2;
-          board->place(arg1[0], xMap.at(arg2[0]), yMap.at(arg2[1]));
+          char piece;
+          cin >> piece >> arg2;
+          Piece* p;
+          switch(piece){ // make new piece based on input
+            case 'p':
+              p = new Pawn{false};
+              break;
+            case 'r':
+              p = new Rook{false};
+              break;
+            case 'n':
+              p = new Knight{false};
+              break;
+            case 'b':
+              p = new Bishop{false};
+              break;
+            case 'q':
+              p = new Queen{false};
+              break;
+            case 'k':
+              p = new King{false};
+              break;
+            case 'P':
+              p = new Pawn{true};
+              break;
+            case 'R':
+              p = new Rook{true};
+              break;
+            case 'N':
+              p = new Knight{true};
+              break;
+            case 'B':
+              p = new Bishop{true};
+              break;
+            case 'Q':
+              p = new Queen{true};
+              break;
+            case 'K':
+              p = new King{true};
+              break;
+            default:
+              throw "Invalid input!";
+              break;
+          }
+          unique_ptr<Piece> temp{p};
+          board->place(move(temp), xMap.at(arg2[0]), yMap.at(arg2[1]));
         } else if(command == "-"){
           cin >> arg1;
           board->remove(xMap.at(arg1[0]), yMap.at(arg1[1]));
