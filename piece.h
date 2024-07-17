@@ -8,12 +8,12 @@ class Piece {
   int point;
   bool isWhite;
 public:
-  Piece();
+  Piece(const bool isWhite, const int point);
+  virtual ~Piece() = default;
   bool getIsWhite();
   int getPoint();
-  virtual ~Piece() = 0;
-  virtual std::vector<std::vector<int>> getPossibleMoves(std::vector<int> current, Board &board) = 0;
-  virtual bool isMovePossible(std::vector<int> current, std::vector<int> to, Board &board) = 0;
+  virtual vector<vector<int>> getLegalMoves(vector<int> current, Board &board) = 0;
+  virtual bool isMoveLegal(vector<int> current, vector<int> destination, Board &board) = 0;
 };
 
 #endif
