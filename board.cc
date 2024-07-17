@@ -22,7 +22,34 @@ bool Board::validBoard(){
   /* CHECK IF KINGS ARE IN CHECK */
 }
 void Board::place(char piece, int posx, int posy){
-  
+
+  switch(piece){
+    case 'p':
+      
+      break;
+    case 'r':
+      break;
+    case 'n':
+      break;
+    case 'b':
+      break;
+    case 'q':
+      break;
+    case 'k':
+      break;
+    case 'P':
+      break;
+    case 'R':
+      break;
+    case 'N':
+      break;
+    case 'B':
+      break;
+    case 'Q':
+      break;
+    case 'K':
+      break;
+  }
 }
 void Board::remove(int posx, int posy){
 
