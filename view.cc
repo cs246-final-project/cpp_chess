@@ -1,0 +1,26 @@
+#include "view.h"
+
+void View::displayBoard(const Board &board){
+  for(int i = 0; i < boardWidth; i++){
+    for(int j = 0; j < boardLength; j++){
+      Piece* p = board.pieceAt(i, j);
+      if(p == nullptr){
+        (i+j)%2 == 0 ? cout << ' ' : cout << '_';
+      } else {
+        char c = piece(p);
+        if(!p->getIsWhite()) c -= 'a'-'A';
+        cout << c;
+      }
+      cout << endl;
+    }
+  }
+}
+
+char piece(Piece* p){
+  if(dynamic_cast<Pawn*>(p) != nullptr) return 'p';
+  if(dynamic_cast<Rook*>(p) != nullptr) return 'r';
+  if(dynamic_cast<Knight*>(p) != nullptr) return 'n';
+  if(dynamic_cast<Bishop*>(p) != nullptr) return 'b';
+  if(dynamic_cast<Queen*>(p) != nullptr) return 'q';
+  if(dynamic_cast<King*>(p) != nullptr) return 'k';
+}

@@ -2,6 +2,10 @@
 #define BOARD_H
 #include "piece.h"
 #include "pawn.h"
+#include "rook.h"
+#include "knight.h"
+#include "bishop.h"
+#include "queen.h"
 #include "king.h"
 #include "history.h"
 #include <vector>
@@ -18,9 +22,9 @@ class Board {
 	
 
 	public:
-		Board() : board{boardWidth, vector<std::unique_ptr<Piece>>(boardLength, nullptr)} {};
+		Board();
 		~Board() = default;
-		Piece* pieceAt(int x, int y);
+		Piece* pieceAt(int x, int y) const;
 
 		vector<vector<int>> getAliveWhite();
 		vector<vector<int>> getAliveBlack();
@@ -30,7 +34,7 @@ class Board {
 
 		bool validBoard();
 
-		void place(char piece, int posx, int posy);
+		void place(unique_ptr<Piece> p, int posx, int posy);
 		void remove(int posx, int posy);
 
 		vector<vector<int>> lastMove();
