@@ -10,6 +10,7 @@ class History {
   vector<unique_ptr<HistoryComponent>> history;
 public:
     void AddMove(vector<int> from, vector<int> to);
+    vector<vector<int>> getLast();
 };
 
 #endif
