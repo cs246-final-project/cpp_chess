@@ -1,5 +1,9 @@
 #include "board.h"
 
+Piece* Board::pieceAt(int x, int y){
+  return board[x][y].get();
+}
+
 bool Board::validBoard(){
   int numWKings = 0;
   int numBKings = 0;
@@ -20,6 +24,14 @@ bool Board::validBoard(){
   }
   if(numWKings != 1 || numBKings != 1) return false;
   /* CHECK IF KINGS ARE IN CHECK */
+}
+bool Board::movePiece (int x, int y, int toX, int toY){
+  if (pieceAt(x,y) == nullptr) return false;
+
+  return true;
+}
+bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
+  return true;
 }
 void Board::place(char piece, int posx, int posy){
   
