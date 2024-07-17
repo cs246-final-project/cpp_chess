@@ -4,17 +4,17 @@ bool Board::validBoard(){
   int numWKings = 0;
   int numBKings = 0;
   for(int i = 0; i < boardWidth; ++i){
-    if(dynamic_cast<Pawn*>(board[0][i]) != nullptr || dynamic_cast<Pawn*>(board[7][i]) != nullptr){
+    if(dynamic_cast<Pawn*>(board[0][i].get()) != nullptr || dynamic_cast<Pawn*>(board[7][i].get()) != nullptr){
       return false;
     }
   }
   for(auto piecePos : aliveWhite){
-    if(dynamic_cast<King*>(board[piecePos.at(0)][piecePos.at(1)]) != nullptr){
+    if(dynamic_cast<King*>(board[piecePos.at(0)][piecePos.at(1)].get()) != nullptr){
       ++numWKings;
     }
   }
   for(auto piecePos : aliveBlack){
-    if(dynamic_cast<King*>(board[piecePos.at(0)][piecePos.at(1)]) != nullptr){
+    if(dynamic_cast<King*>(board[piecePos.at(0)][piecePos.at(1)].get()) != nullptr){
       ++numBKings;
     }
   }
@@ -27,4 +27,9 @@ void Board::place(char piece, int posx, int posy){
 void Board::remove(int posx, int posy){
 
 }
-
+vector<vector<int>> Board::lastMove(){
+  return history->getLast();
+}
+bool Board::willCheck(vector<int> from, vector<int> to){
+  return true;
+}
