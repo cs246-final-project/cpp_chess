@@ -9,9 +9,9 @@ class Piece {
   bool isWhite;
 public:
   Piece(const bool isWhite, const int point);
+  virtual ~Piece() = default;
   bool getIsWhite();
   int getPoint();
-  virtual ~Piece();
   virtual vector<vector<int>> getLegalMoves(vector<int> current, Board &board) = 0;
   virtual bool isMoveLegal(vector<int> current, vector<int> destination, Board &board) = 0;
 };
