@@ -11,12 +11,15 @@ const int boardWidth = 8;
 const int boardLength = 8;
 
 class Board {
-	unique_ptr<Piece> board[boardWidth][boardLength];
+	vector<vector<unique_ptr<Piece>>> board;
 	vector<vector<int>> aliveWhite;
 	vector<vector<int>> aliveBlack;
 	unique_ptr<History> history;
+	
 
 	public:
+		Board() : board{boardWidth, vector<std::unique_ptr<Piece>>(boardLength, nullptr)} {};
+		~Board() = default;
 		Piece* pieceAt(int x, int y);
 
 		vector<vector<int>> getAliveWhite();
