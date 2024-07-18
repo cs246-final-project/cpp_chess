@@ -6,19 +6,19 @@ Bishop::Bishop(const bool isWhite) : Piece(isWhite, bishopPoint) {};
 
 // Check if the move is legal for the Bishop
 // all current and to should be guaranteed to be in the board
-bool Bishop::isMoveLegal(vector<int> current, vector<int> destination, Board &board) {
+bool Bishop::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   // false if the destination is same as current location
-  if (current[0] == destination[0] && current[1] == destination[1]) return false;
+  if (x == toX && y == toY) return false;
   // false if the destination is not in the same diagonal
-  if (abs(current[0] - destination[0]) != abs(current[1] - destination[1])) return false;
+  if (abs(x - toX) != abs(y - toY)) return false;
   // false if there is a piece in between
-  int xSign = current[0] < destination[0] ? 1 : -1;
-  int ySign = current[1] < destination[1] ? 1 : -1;
-  for (int i = 1; i < abs(current[0] - destination[0]); ++i) {
-    if (board.pieceAt(current[0] + i * xSign, current[1] + i * ySign) != nullptr) return false;
+  int xSign = x < toX ? 1 : -1;
+  int ySign = y < toY ? 1 : -1;
+  for (int i = 1; i < abs(x - toX); ++i) {
+    if (board.pieceAt(x + i * xSign, y + i * ySign) != nullptr) return false;
   }
   // false if the destination has a piece of the same color
-  if (board.pieceAt(destination[0], destination[1]) != nullptr && board.pieceAt(destination[0], destination[1])->getIsWhite() == this->getIsWhite()) return false;
+  if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   return true;
 }
 

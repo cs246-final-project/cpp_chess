@@ -16,25 +16,25 @@ void Rook::setDidFirstMove() {
 
 // Check if the move is legal for the Rook
 // all current and to should be guaranteed to be in the board
-bool Rook::isMoveLegal(vector<int> current, vector<int> destination, Board &board) {
+bool Rook::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   // false if the destination is same as current location
-  if (current[0] == destination[0] && current[1] == destination[1]) return false;
+  if (x == toX && y == toY) return false;
   // false if the destination is not in the same row or column
-  if (current[0] != destination[0] && current[1] != destination[1]) return false;
+  if (x != toX && y != toY) return false;
   // false if there is a piece in between
-  if (current[0] == destination[0]) {
-    int sign = current[1] < destination[1] ? 1 : -1;
-    for (int i = 1; i < abs(current[1] - destination[1]); ++i) {
-      if (board.pieceAt(current[0], current[1] + i * sign) != nullptr) return false;
+  if (x == toX) {
+    int sign = y < toY ? 1 : -1;
+    for (int i = 1; i < abs(y - toY); ++i) {
+      if (board.pieceAt(x, y + i * sign) != nullptr) return false;
     }
   } else {
-    int sign = current[0] < destination[0] ? 1 : -1;
-    for (int i = 1; i < abs(current[0] - destination[0]); ++i) {
-      if (board.pieceAt(current[0] + i * sign, current[1]) != nullptr) return false;
+    int sign = x < toX ? 1 : -1;
+    for (int i = 1; i < abs(x - toX); ++i) {
+      if (board.pieceAt(x + i * sign, y) != nullptr) return false;
     }
   }
   // false if the destination has a piece of the same color
-  if (board.pieceAt(destination[0], destination[1]) != nullptr && board.pieceAt(destination[0], destination[1])->getIsWhite() == this->getIsWhite()) return false;
+  if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   return true;
 }
 

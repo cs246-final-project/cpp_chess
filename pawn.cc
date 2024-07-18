@@ -16,43 +16,43 @@ void Pawn::setDidFirstMove() {
 
 // Check if the move is legal for the Pawn
 // all current and to should be guaranteed to be in the board
-bool Pawn::isMoveLegal(vector<int> current, vector<int> destination, Board &board) {
+bool Pawn::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   // false if the destination is same as current location
-  if (current[0] == destination[0] && current[1] == destination[1]) return false;
+  if (x == toX && y == toY) return false;
   // TODO: check for en passant
   // false if the destination is not in the same row
-  if (current[0] != destination[0]) return false;
+  if (x != toX) return false;
   // false if the destination has a piece of the same color
-  if (board.pieceAt(destination[0], destination[1]) != nullptr && board.pieceAt(destination[0], destination[1])->getIsWhite() == this->getIsWhite()) return false;
+  if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   // false if the destination is backward
-  if (getIsWhite && current[0] < destination[0]) return false;
-  if (!getIsWhite && current[0] > destination[0]) return false;
-  if (abs(current[1] == destination[1])) {
+  if (getIsWhite && x < toX) return false;
+  if (!getIsWhite && x > toX) return false;
+  if (abs(y == toY)) {
     // moving forward logic
-    if (abs(current[0] - destination[0]) == 2) {
+    if (abs(x - toX) == 2) {
       // when moving 2 squares
       if (didFirstMove) return false;
       // if there is a piece at destination, return false
-      if (board.pieceAt(destination[0], destination[1]) != nullptr) {
+      if (board.pieceAt(toX, toY) != nullptr) {
         return false;
       }
       // if there is a piece in between, return false
-      if (board.pieceAt(current[0] + (destination[0] - current[0]) / 2, current[1]) != nullptr) {
+      if (board.pieceAt(x + (toX - x) / 2, y) != nullptr) {
         return false;
       }
-    } else if (abs(current[0] - destination[0]) == 1) {
+    } else if (abs(x - toX) == 1) {
       // if there is a piece at destination, return false
-      if (board.pieceAt(destination[0], destination[1]) != nullptr) {
+      if (board.pieceAt(toX, toY) != nullptr) {
         return false;
       }
     } else {
       // if the destination is not 1 or 2 squares away, return false
       return false;
     }
-  } else if (abs(current[1] - destination[1]) == 1 && abs(current[0] - destination[0]) == 1){
+  } else if (abs(y - toY) == 1 && abs(x - toX) == 1){
     // capturing logic
     // if no piece at destination, return false
-    if (board.pieceAt(destination[0], destination[1]) == nullptr) {
+    if (board.pieceAt(toX, toY) == nullptr) {
       return false;
     }
   } else {
