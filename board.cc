@@ -31,17 +31,35 @@ bool Board::validBoard(){
 
   */
 }
+
 bool Board::movePiece (int x, int y, int toX, int toY){
   if (pieceAt(x,y) == nullptr) return false;
-
-  return true;
+  if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this)){
+    if (pieceAt(toX, toY) != nullptr){
+      Piece *p = pieceAt(toX, toY);
+      if (pieceAt(toX, toY)->getIsWhite()){
+        // remove vector{toX, toY} from aliveWhite
+        aliveWhite.erase(std::remove_if(aliveWhite.begin(), aliveWhite.end(), [&](const vector<int>& pos) {
+            return pos == vector<int>{toX, toY};
+        }), aliveWhite.end());
+      } else {
+        // remove vector{toX, toY} from aliveBlack
+        aliveBlack.erase(std::remove_if(aliveBlack.begin(), aliveBlack.end(), [&](const vector<int>& pos) {
+            return pos == vector<int>{toX, toY};
+        }), aliveBlack.end());
+      }
+    }
+    board[toX][toY] = move(board[x][y]);
+    return true;
+  }
+  return false;
 }
 bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
   return true;
 }
 void Board::place(unique_ptr<Piece> p, int posx, int posy){
-  board.at(posx).at(posy) = move(p);
   p->getIsWhite() ? aliveWhite.emplace_back(vector<int>{posx, posy}) : aliveBlack.emplace_back(vector<int>{posx, posy});
+  board.at(posx).at(posy) = move(p);
 }
 void Board::remove(int posx, int posy){
 
