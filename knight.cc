@@ -6,13 +6,13 @@ Knight::Knight(const bool isWhite): Piece(isWhite, knightPoint) {}
 
 // Check if the move is legal for the Knight
 // all current and to should be guaranteed to be in the board
-bool Knight::isMoveLegal(vector<int> current, vector<int> destination, Board &board) {
+bool Knight::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   // false if the destination is same as current location or the destination is in the same row or column
-  if (current[0] == destination[0] || current[1] == destination[1]) return false;
+  if (y == toX || y == toY) return false;
   // false if the destination is not in the L shape
-  if (abs(current[0] - destination[0]) + abs(current[1] - destination[1]) != 3) return false;
+  if (abs(y - toX) + abs(y - toY) != 3) return false;
   // false if the destination has a piece of the same color
-  if (board.pieceAt(destination[0], destination[1]) != nullptr && board.pieceAt(destination[0], destination[1])->getIsWhite() == this->getIsWhite()) return false;
+  if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   return true;
 }
 

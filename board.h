@@ -38,6 +38,8 @@ class Board {
 
 		void place(Piece* p, int posx, int posy);
 		void remove(int posx, int posy);
+		void removePieceFromAlive(int x, int y);
+		void addPieceToAlive(int x, int y);
 
 		vector<vector<int>> lastMove();
 

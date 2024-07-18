@@ -9,7 +9,7 @@ Piece* Board::pieceAt(int x, int y) const {
 bool Board::colorInCheck(bool isWhite, vector<int> kingPos){
   for(auto pos : (isWhite ? aliveBlack : aliveWhite)){
     if(pos != kingPos){
-      if(board[pos[0]][pos[1]].get()->isMoveLegal(pos, kingPos, *this)) return false;
+      if(board[pos[0]][pos[1]].get()->isMoveLegal(pos[0], pos[1], kingPos[0], kingPos[1], *this)) return false;
     }
   }
 }
@@ -40,20 +40,34 @@ bool Board::validBoard(){
   if(colorInCheck(true, whiteKingPos) || colorInCheck(false, blackKingPos)) return false;
   return true;
 }
+
 bool Board::movePiece (int x, int y, int toX, int toY){
   if (pieceAt(x,y) == nullptr) return false;
-
-  return true;
+  if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this)){
+    if (pieceAt(toX, toY) != nullptr){
+      remove(toX, toY);
+    }
+    removePieceFromAlive(x, y);
+    board[toX][toY] = move(board[x][y]);
+    addPieceToAlive(toX, toY);
+    return true;
+  }
+  return false;
 }
 bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
   return true;
 }
 void Board::place(Piece* p, int posx, int posy){
+  if (pieceAt(posx, posy)) {
+    remove(posx, posy);
+  }
   unique_ptr<Piece>temp{p};
   board[posx][posy] = move(temp);
-  p->getIsWhite() ? aliveWhite.emplace_back(vector<int>{posx, posy}) : aliveBlack.emplace_back(vector<int>{posx, posy});
+  addPieceToAlive(posx, posy);
+
 }
 void Board::remove(int posx, int posy){
+  removePieceFromAlive(posx, posy);
   board[posx][posy].reset(nullptr);
   
 }
@@ -63,3 +77,25 @@ vector<vector<int>> Board::lastMove(){
 bool Board::willCheck(vector<int> from, vector<int> to){
   return true;
 }
+
+void Board::removePieceFromAlive(int x, int y) {
+  if (pieceAt(x, y)->getIsWhite()){
+    // remove vector{toX, toY} from aliveWhite
+    aliveWhite.erase(std::remove_if(aliveWhite.begin(), aliveWhite.end(), [&](const vector<int>& pos) {
+        return pos == vector<int>{x, y};
+    }), aliveWhite.end());
+  } else {
+    // remove vector{toX, toY} from aliveBlack
+    aliveBlack.erase(std::remove_if(aliveBlack.begin(), aliveBlack.end(), [&](const vector<int>& pos) {
+        return pos == vector<int>{x, y};
+    }), aliveBlack.end());
+  }
+}
+
+void Board::addPieceToAlive(int x, int y) {
+  if (pieceAt(x, y)->getIsWhite()){
+    aliveWhite.emplace_back(vector<int>{x, y});
+  } else {
+    aliveBlack.emplace_back(vector<int>{x, y});
+  }
+};
