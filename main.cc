@@ -1,5 +1,6 @@
 #include "piece.h"
 #include "board.h"
+#include "view.h"
 
 #include <iostream>
 #include <memory>
@@ -32,6 +33,7 @@ int main() {
   int whitePoints, blackPoints;
 
   unique_ptr<Board> board = make_unique<Board>();
+  unique_ptr<View> view = make_unique<View>();
   // unique_ptr<Player> white;
   // unique_ptr<Player> black;
   
@@ -84,10 +86,11 @@ int main() {
         } else {
           string from, to;
           cin >> from >> to;
-          vector<int> fromPos{from.at(0), from.at(1)};
-          vector<int> toPos{to.at(0), to.at(1)};
+          vector<int> fromPos{from[0], from[1]};
+          vector<int> toPos{to[0], to[1]};
         }
       }
+      view->displayBoard(*board.get());
     } else if(command == "setup"){
       setupMode = true;
       string arg1, arg2;
@@ -95,53 +98,54 @@ int main() {
         if(command == "+"){
           char piece;
           cin >> piece >> arg2;
-          Piece* p;
+          unique_ptr<Piece> p;
           switch(piece){ // make new piece based on input
             case 'p':
-              p = new Pawn{false};
+              p = make_unique<Pawn>(false);
               break;
             case 'r':
-              p = new Rook{false};
+              p = make_unique<Rook>(false);
               break;
             case 'n':
-              p = new Knight{false};
+              p = make_unique<Knight>(false);
               break;
             case 'b':
-              p = new Bishop{false};
+              p = make_unique<Bishop>(false);
               break;
             case 'q':
-              p = new Queen{false};
+              p = make_unique<Queen>(false);
               break;
             case 'k':
-              p = new King{false};
+              p = make_unique<King>(false);
               break;
             case 'P':
-              p = new Pawn{true};
+              p = make_unique<Pawn>(true);
               break;
             case 'R':
-              p = new Rook{true};
+              p = make_unique<Rook>(true);
               break;
             case 'N':
-              p = new Knight{true};
+              p = make_unique<Knight>(true);
               break;
             case 'B':
-              p = new Bishop{true};
+              p = make_unique<Bishop>(true);
               break;
             case 'Q':
-              p = new Queen{true};
+              p = make_unique<Queen>(true);
               break;
             case 'K':
-              p = new King{true};
+              p = make_unique<King>(true);
               break;
             default:
               throw "Invalid input!";
               break;
           }
-          unique_ptr<Piece> temp{p};
-          board->place(move(temp), xMap.at(arg2[0]), yMap.at(arg2[1]));
+          board->place(move(p), xMap[arg2[0]], yMap[arg2[1]]);
+          view->displayBoard(*board.get());
         } else if(command == "-"){
           cin >> arg1;
-          board->remove(xMap.at(arg1[0]), yMap.at(arg1[1]));
+          board->remove(xMap[arg1[0]], yMap[arg1[1]]);
+          view->displayBoard(*board.get());
         } else if(command == "="){
           cin >> arg1;
           arg1 == "white" ? isWhiteTurn = true : isWhiteTurn = false;

@@ -32,6 +32,8 @@ class Board {
 		bool movePiece(int x, int y, int toX, int toY);
 		bool movePiece(int x, int y, int toX, int toY, char promotion);
 
+		bool colorInCheck(bool isWhite, vector<int> kingPos);
+
 		bool validBoard();
 
 		void place(unique_ptr<Piece> p, int posx, int posy);
