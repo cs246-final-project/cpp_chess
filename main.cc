@@ -98,49 +98,49 @@ int main() {
         if(command == "+"){
           char piece;
           cin >> piece >> arg2;
-          unique_ptr<Piece> p;
+          Piece* p;
           switch(piece){ // make new piece based on input
             case 'p':
-              p = make_unique<Pawn>(false);
+              p = new Pawn(false);
               break;
             case 'r':
-              p = make_unique<Rook>(false);
+              p = new Rook(false);
               break;
             case 'n':
-              p = make_unique<Knight>(false);
+              p = new Knight(false);
               break;
             case 'b':
-              p = make_unique<Bishop>(false);
+              p = new Bishop(false);
               break;
             case 'q':
-              p = make_unique<Queen>(false);
+              p = new Queen(false);
               break;
             case 'k':
-              p = make_unique<King>(false);
+              p = new King(false);
               break;
             case 'P':
-              p = make_unique<Pawn>(true);
+              p = new Pawn(true);
               break;
             case 'R':
-              p = make_unique<Rook>(true);
+              p = new Rook(true);
               break;
             case 'N':
-              p = make_unique<Knight>(true);
+              p = new Knight(true);
               break;
             case 'B':
-              p = make_unique<Bishop>(true);
+              p = new Bishop(true);
               break;
             case 'Q':
-              p = make_unique<Queen>(true);
+              p = new Queen(true);
               break;
             case 'K':
-              p = make_unique<King>(true);
+              p = new King(true);
               break;
             default:
               throw "Invalid input!";
               break;
           }
-          board->place(move(p), xMap[arg2[0]], yMap[arg2[1]]);
+          board->place(p, xMap[arg2[0]], yMap[arg2[1]]);
           view->displayBoard(*board.get());
         } else if(command == "-"){
           cin >> arg1;

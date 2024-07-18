@@ -57,12 +57,14 @@ bool Board::movePiece (int x, int y, int toX, int toY){
 bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
   return true;
 }
-void Board::place(unique_ptr<Piece> p, int posx, int posy){
+void Board::place(Piece* p, int posx, int posy){
   if (pieceAt(posx, posy)) {
     remove(posx, posy);
   }
+  unique_ptr<Piece>temp{p};
+  board[posx][posy] = move(temp);
   addPieceToAlive(posx, posy);
-  board.at(posx).at(posy) = move(p);
+
 }
 void Board::remove(int posx, int posy){
   removePieceFromAlive(posx, posy);
