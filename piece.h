@@ -13,7 +13,7 @@ public:
   bool getIsWhite();
   int getPoint();
   virtual vector<vector<int>> getLegalMoves(vector<int> current, Board &board) = 0;
-  virtual bool isMoveLegal(vector<int> current, vector<int> destination, Board &board) = 0;
+  virtual bool isMoveLegal(int x, int y, int toX, int toY, Board &board) = 0;
 };
 
 #endif

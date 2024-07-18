@@ -16,16 +16,16 @@ void King::setDidFirstMove() {
 
 // Check if the move is legal for the King
 // all current and to should be guaranteed to be in the board
-bool King::isMoveLegal(vector<int> current, vector<int> destination, Board &board) {
+bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   if (!didFirstMove) {
     // TODO: check for castling and return true if it is a castling move
   }
   // false if the destination is same as current location
-  if (abs(current[0] - destination[0]) > 1 || abs(current[1] - destination[1]) > 1) {
+  if (abs(x - toX) > 1 || abs(y - toY) > 1) {
     return false;
   }
   // false if the destination has a piece of the same color
-  if (board.pieceAt(destination[0], destination[1]) != nullptr && board.pieceAt(destination[0], destination[1])->getIsWhite() == this->getIsWhite()) {
+  if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) {
     return false;
   }
   // TODO: check if the King is in check after the move
