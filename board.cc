@@ -48,8 +48,9 @@ bool Board::movePiece (int x, int y, int toX, int toY){
 bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
   return true;
 }
-void Board::place(unique_ptr<Piece> p, int posx, int posy){
-  board[posx][posy] = move(p);
+void Board::place(Piece* p, int posx, int posy){
+  unique_ptr<Piece>temp{p};
+  board[posx][posy] = move(temp);
   p->getIsWhite() ? aliveWhite.emplace_back(vector<int>{posx, posy}) : aliveBlack.emplace_back(vector<int>{posx, posy});
 }
 void Board::remove(int posx, int posy){

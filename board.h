@@ -36,7 +36,7 @@ class Board {
 
 		bool validBoard();
 
-		void place(unique_ptr<Piece> p, int posx, int posy);
+		void place(Piece* p, int posx, int posy);
 		void remove(int posx, int posy);
 
 		vector<vector<int>> lastMove();
