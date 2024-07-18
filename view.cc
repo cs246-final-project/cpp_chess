@@ -15,6 +15,12 @@ void View::displayBoard(const Board &board){
     }
   }
 }
+void View::update(vector<vector<int>> coords){
+  for(auto pos : coords){
+    
+  }
+}
+
 
 char piece(Piece* p){
   if(dynamic_cast<Pawn*>(p) != nullptr) return 'p';
