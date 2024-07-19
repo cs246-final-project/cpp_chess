@@ -2,6 +2,8 @@
 #define QUEEN_H
 #include "piece.h"
 
+class Board;
+
 class Queen : public Piece {
   public:
     Queen(const bool isWhite);

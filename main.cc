@@ -98,50 +98,52 @@ int main() {
         if(command == "+"){
           char piece;
           cin >> piece >> arg2;
-          Piece* p;
+          unique_ptr<Piece> up;
           switch(piece){ // make new piece based on input
             case 'p':
-              p = new Pawn(false);
+              up = make_unique<Pawn>(false);
               break;
             case 'r':
-              p = new Rook(false);
+              up = make_unique<Rook>(false);
               break;
             case 'n':
-              p = new Knight(false);
+              up = make_unique<Knight>(false);
               break;
             case 'b':
-              p = new Bishop(false);
+              up = make_unique<Bishop>(false);
               break;
             case 'q':
-              p = new Queen(false);
+              up = make_unique<Queen>(false);
               break;
             case 'k':
-              p = new King(false);
+              up = make_unique<King>(false);
               break;
             case 'P':
-              p = new Pawn(true);
+              up = make_unique<Pawn>(true);
               break;
             case 'R':
-              p = new Rook(true);
+              up = make_unique<Rook>(true);
               break;
             case 'N':
-              p = new Knight(true);
+              up = make_unique<Knight>(true);
               break;
             case 'B':
-              p = new Bishop(true);
+              up = make_unique<Bishop>(true);
               break;
             case 'Q':
-              p = new Queen(true);
+              up = make_unique<Queen>(true);
               break;
             case 'K':
-              p = new King(true);
+              up = make_unique<King>(true);
               break;
             default:
-              throw "Invalid input!";
+              cout << "Invalid input!" << endl;
               break;
           }
-          board->place(p, xMap[arg2[0]], yMap[arg2[1]]);
-          view->displayBoard(*board.get());
+          if (up != nullptr) {
+            board->place(move(up), xMap[arg2[0]], yMap[arg2[1]]);
+            view->displayBoard(*board.get());
+          }
         } else if(command == "-"){
           cin >> arg1;
           board->remove(xMap[arg1[0]], yMap[arg1[1]]);

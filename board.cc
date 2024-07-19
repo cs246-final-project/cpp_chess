@@ -1,6 +1,14 @@
 #include "board.h"
 
-Board::Board() : board{boardWidth, vector<std::unique_ptr<Piece>>(boardLength, nullptr)}{}
+Board::Board() {
+  for (int i = 0; i < boardWidth; ++i) {
+    std::vector<std::unique_ptr<Piece>> row(boardHeight); // Create a row with boardLength elements
+    for (int j = 0; j < boardHeight; ++j) {
+      row[j] = nullptr; // Initialize each element as nullptr
+    }
+    board.push_back(std::move(row)); // Move the row into the board
+  }
+}
 
 Piece* Board::pieceAt(int x, int y) const {
   return board[x][y].get();
@@ -12,6 +20,7 @@ bool Board::colorInCheck(bool isWhite, vector<int> kingPos){
       if(board[pos[0]][pos[1]].get()->isMoveLegal(pos[0], pos[1], kingPos[0], kingPos[1], *this)) return false;
     }
   }
+  return true;
 }
 
 bool Board::validBoard(){
@@ -54,26 +63,30 @@ bool Board::movePiece (int x, int y, int toX, int toY){
   }
   return false;
 }
+
 bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
   return true;
 }
-void Board::place(Piece* p, int posx, int posy){
-  if (pieceAt(posx, posy)) {
-    remove(posx, posy);
+
+void Board::place(unique_ptr<Piece> p, int posX, int posY){
+  if (pieceAt(posX, posY)) {
+    remove(posX, posY);
   }
-  unique_ptr<Piece>temp{p};
-  board[posx][posy] = move(temp);
-  addPieceToAlive(posx, posy);
+  board[posX][posY] = move(p);
+  addPieceToAlive(posX, posY);
 
 }
-void Board::remove(int posx, int posy){
-  removePieceFromAlive(posx, posy);
-  board[posx][posy].reset(nullptr);
+
+void Board::remove(int posX, int posY){
+  removePieceFromAlive(posX, posY);
+  board[posX][posY].reset(nullptr);
   
 }
+
 vector<vector<int>> Board::lastMove(){
   return history->getLast();
 }
+
 bool Board::willCheck(vector<int> from, vector<int> to){
   return true;
 }
@@ -81,12 +94,12 @@ bool Board::willCheck(vector<int> from, vector<int> to){
 void Board::removePieceFromAlive(int x, int y) {
   if (pieceAt(x, y)->getIsWhite()){
     // remove vector{toX, toY} from aliveWhite
-    aliveWhite.erase(std::remove_if(aliveWhite.begin(), aliveWhite.end(), [&](const vector<int>& pos) {
+    aliveWhite.erase(remove_if(aliveWhite.begin(), aliveWhite.end(), [&](const vector<int>& pos) {
         return pos == vector<int>{x, y};
     }), aliveWhite.end());
   } else {
     // remove vector{toX, toY} from aliveBlack
-    aliveBlack.erase(std::remove_if(aliveBlack.begin(), aliveBlack.end(), [&](const vector<int>& pos) {
+    aliveBlack.erase(remove_if(aliveBlack.begin(), aliveBlack.end(), [&](const vector<int>& pos) {
         return pos == vector<int>{x, y};
     }), aliveBlack.end());
   }

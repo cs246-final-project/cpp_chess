@@ -1,4 +1,5 @@
 #include "knight.h"
+#include "board.h"
 
 int knightPoint = 30;
 

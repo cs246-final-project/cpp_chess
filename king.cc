@@ -1,4 +1,5 @@
 #include "king.h"
+#include "board.h"
 
 int kingPoints = 900;
 

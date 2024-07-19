@@ -2,17 +2,17 @@
 
 void View::displayBoard(const Board &board){
   for(int i = 0; i < boardWidth; i++){
-    for(int j = 0; j < boardLength; j++){
+    for(int j = 0; j < boardHeight; j++){
       Piece* p = board.pieceAt(i, j);
       if(p == nullptr){
         (i+j)%2 == 0 ? cout << ' ' : cout << '_';
       } else {
-        char c = piece(p);
+        char c = getPieceChar(p);
         if(!p->getIsWhite()) c -= 'a'-'A';
         cout << c;
       }
-      cout << endl;
     }
+    cout << endl;
   }
 }
 void View::update(vector<vector<int>> coords){
@@ -22,7 +22,7 @@ void View::update(vector<vector<int>> coords){
 }
 
 
-char piece(Piece* p){
+char View::getPieceChar(Piece* p){
   if(dynamic_cast<Pawn*>(p) != nullptr) return 'p';
   if(dynamic_cast<Rook*>(p) != nullptr) return 'r';
   if(dynamic_cast<Knight*>(p) != nullptr) return 'n';

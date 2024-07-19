@@ -2,6 +2,8 @@
 #define BISHOP_H
 #include "piece.h"
 
+class Board;
+
 class Bishop : public Piece {
   public:
     Bishop(const bool isWhite);

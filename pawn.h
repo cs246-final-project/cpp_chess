@@ -2,6 +2,8 @@
 #define PAWN_H
 #include "piece.h"
 
+class Board;
+
 class Pawn : public Piece {
   bool didFirstMove;
   public:

@@ -2,7 +2,9 @@
 #define PIECE_H
 
 #include <vector>
-#include "board.h"
+using namespace std;
+
+class Board; // forward declaration
 
 class Piece {
   int point;

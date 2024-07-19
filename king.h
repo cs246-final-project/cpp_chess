@@ -2,6 +2,8 @@
 #define KING_H
 #include "piece.h"
 
+class Board;
+
 class King : public Piece {
   bool didFirstMove;
   public:

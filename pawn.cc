@@ -1,4 +1,5 @@
 #include "pawn.h"
+#include "board.h"
 
 int pawnPoint = 10;
 
@@ -25,9 +26,9 @@ bool Pawn::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   // false if the destination has a piece of the same color
   if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   // false if the destination is backward
-  if (getIsWhite && x < toX) return false;
-  if (!getIsWhite && x > toX) return false;
-  if (abs(y == toY)) {
+  if (getIsWhite() && x < toX) return false;
+  if (!getIsWhite() && x > toX) return false;
+  if (y == toY) {
     // moving forward logic
     if (abs(x - toX) == 2) {
       // when moving 2 squares

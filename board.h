@@ -1,5 +1,6 @@
 #ifndef BOARD_H
 #define BOARD_H
+#include "history.h"
 #include "piece.h"
 #include "pawn.h"
 #include "rook.h"
@@ -7,12 +8,13 @@
 #include "bishop.h"
 #include "queen.h"
 #include "king.h"
-#include "history.h"
 #include <vector>
 using namespace std;
 
 const int boardWidth = 8;
-const int boardLength = 8;
+const int boardHeight = 8;
+
+class Piece; // forward declaration
 
 class Board {
 	vector<vector<unique_ptr<Piece>>> board;
@@ -36,7 +38,7 @@ class Board {
 
 		bool validBoard();
 
-		void place(Piece* p, int posx, int posy);
+		void place(unique_ptr<Piece> p, int posx, int posy);
 		void remove(int posx, int posy);
 		void removePieceFromAlive(int x, int y);
 		void addPieceToAlive(int x, int y);
@@ -46,8 +48,6 @@ class Board {
 		bool willCheck(vector<int> from, vector<int> to);
 
 		Board(const Board &other);
-		Board();
-
 };
 
 #endif

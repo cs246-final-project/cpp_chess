@@ -2,6 +2,8 @@
 #define KNIGHT_H
 #include "piece.h"
 
+class Board;
+
 class Knight : public Piece {
   public:
     Knight(const bool isWhite);

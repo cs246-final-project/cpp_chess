@@ -2,6 +2,8 @@
 #define ROOK_H
 #include "piece.h"
 
+class Board;
+
 class Rook : public Piece {
   bool didFirstMove;
   public:

@@ -1,4 +1,5 @@
 #include "bishop.h"
+#include "board.h"
 
 int bishopPoint = 30;
 

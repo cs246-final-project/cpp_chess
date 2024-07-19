@@ -1,4 +1,5 @@
 #include "rook.h"
+#include "board.h"
 
 int rookPoint = 50;
 
