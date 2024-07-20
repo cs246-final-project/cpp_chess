@@ -6,30 +6,18 @@
 #include <memory>
 #include <map>
 
+int getRow(char c){
+  return 7-(c-49);
+}
+int getCol(char c){
+  if(c < 90) c += 32;
+  return c -= 97;
+}
+
 int main() {
   bool gameStart = false;
   bool setupMode = false;
   bool isWhiteTurn = true;
-
-  map<char, int> xMap;
-  map<char, int> yMap;
-  xMap.insert({'1', 0});
-  xMap.insert({'2', 1});
-  xMap.insert({'3', 2});
-  xMap.insert({'4', 3});
-  xMap.insert({'5', 4});
-  xMap.insert({'6', 5});
-  xMap.insert({'7', 6});
-  xMap.insert({'8', 7});
-  yMap.insert({'a', 0});
-  yMap.insert({'b', 1});
-  yMap.insert({'c', 2});
-  yMap.insert({'d', 3});
-  yMap.insert({'e', 4});
-  yMap.insert({'f', 5});
-  yMap.insert({'g', 6});
-  yMap.insert({'h', 7});
-
   int whitePoints, blackPoints;
 
   unique_ptr<Board> board = make_unique<Board>();
@@ -141,12 +129,12 @@ int main() {
               break;
           }
           if (up != nullptr) {
-            board->place(move(up), xMap[arg2[0]], yMap[arg2[1]]);
+            board->place(move(up), getRow(arg2[1]), getCol(arg2[0]));
             view->displayBoard(*board.get());
           }
         } else if(command == "-"){
           cin >> arg1;
-          board->remove(xMap[arg1[0]], yMap[arg1[1]]);
+          board->remove(getRow(arg2[1]), getCol(arg2[0]));
           view->displayBoard(*board.get());
         } else if(command == "="){
           cin >> arg1;

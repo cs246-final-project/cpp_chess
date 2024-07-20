@@ -8,7 +8,7 @@ void View::displayBoard(const Board &board){
         (i+j)%2 == 0 ? cout << ' ' : cout << '_';
       } else {
         char c = getPieceChar(p);
-        if(!p->getIsWhite()) c -= 'a'-'A';
+        if(p->getIsWhite()) c -= 'a'-'A';
         cout << c;
       }
     }
