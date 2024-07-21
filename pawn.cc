@@ -21,8 +21,6 @@ bool Pawn::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
   // TODO: check for en passant
-  // false if the destination is not in the same row
-  if (x != toX) return false;
   // false if the destination has a piece of the same color
   if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   // false if the destination is backward
