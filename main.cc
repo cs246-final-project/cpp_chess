@@ -57,25 +57,58 @@ int main() {
       unique_ptr<Board> temp = make_unique<Board>();
       swap(board, temp);
     } else if(command == "move") {
-      
+      string from, to;
+      cin >> from >> to;
+      if (from.length() < 2 || to.length() < 2) {
+        cout << "Invalid input!" << endl;
+        continue;
+      }
+      vector<vector<int>> pos;
+      // cast string input "from" to vector of positions
+      if (from[0] >= 65 && from[0] <= 72) pos.push_back({from[1] - 49, from[0] - 65});
+      else if (from[0] >= 97 && from[0 <= 104]) pos.push_back({from[1] - 49, from[0] - 97});
+      else {
+        cout << "Invalid input!" << endl;
+        continue;
+      }
+      // cast string input "to" to vector of positions
+      if (to[0] >= 65 && to[0] <= 72) pos.push_back({to[1] - 49, to[0] - 65});
+      else if (to[0] >= 97 && to[0 <= 104]) pos.push_back({to[1] - 49, to[0] - 97});
+      else {
+        cout << "Invalid input!" << endl;
+        continue;
+      }
+      if (pos[0][0] < 0 || pos[0][0] > 7 || pos[1][0] < 0 || pos[1][0] > 7) {
+        cout << "Invalid input!" << endl;
+        continue;
+      }
+      if (board->pieceAt(pos[0][0], pos[0][1]) == nullptr){
+        cout << "Invalid Move! (No Piece at the Position!)" << endl;
+        continue;
+      } else if (board->pieceAt(pos[0][0], pos[0][1])->getIsWhite() != isWhiteTurn){
+        cout << "Invalid Move! (Not Your Piece)" << endl;
+        continue;
+      }
       if(isWhiteTurn){
-        if(true/*white.isComputer()*/){
+        if(false/*white.isComputer()*/){
           // white.move()
         } else {
-          string from, to;
-          cin >> from >> to;
-          vector<int> fromPos{from[0], from[1]};
-          vector<int> toPos{to[0], to[1]};
-          
+          if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
+            isWhiteTurn = false;
+          } else {
+            cout << "Invalid Move!" << endl;
+          }
         }
       } else {
-        if(true/*black.isComputer()*/){
+        if(false/*black.isComputer()*/){
           // black.move()
         } else {
-          string from, to;
-          cin >> from >> to;
-          vector<int> fromPos{from[0], from[1]};
-          vector<int> toPos{to[0], to[1]};
+          
+          if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
+            isWhiteTurn = true;
+          } else {
+            cout << "Invalid Move!" << endl;
+          }
         }
       }
       view->displayBoard(*board.get());

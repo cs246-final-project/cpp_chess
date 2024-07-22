@@ -16,11 +16,9 @@ Piece* Board::pieceAt(int x, int y) const {
 
 bool Board::colorInCheck(bool isWhite, vector<int> kingPos){
   for(auto pos : (isWhite ? aliveBlack : aliveWhite)){
-    if(pos != kingPos){
-      if(board[pos[0]][pos[1]].get()->isMoveLegal(pos[0], pos[1], kingPos[0], kingPos[1], *this)) return false;
-    }
+    if(pieceAt(pos[0], pos[1])->isMoveLegal(pos[0], pos[1], kingPos[0], kingPos[1], *this)) return true;
   }
-  return true;
+  return false;
 }
 
 bool Board::validBoard(){
@@ -46,7 +44,7 @@ bool Board::validBoard(){
     }
   }
   if(numWKings != 1 || numBKings != 1) return false; // if either side does not have exactly one king
-  if(colorInCheck(true, whiteKingPos) || colorInCheck(false, blackKingPos)) return false;
+  if(colorInCheck(true, blackKingPos) || colorInCheck(false, whiteKingPos)) return false;
   return true;
 }
 
