@@ -1,6 +1,7 @@
 #include "piece.h"
 #include "board.h"
 #include "view.h"
+#include "history.h"
 
 #include <iostream>
 #include <memory>
@@ -22,6 +23,7 @@ int main() {
 
   unique_ptr<Board> board = make_unique<Board>();
   unique_ptr<View> view = make_unique<View>();
+  unique_ptr<History> history = make_unique<History>();
   // unique_ptr<Player> white;
   // unique_ptr<Player> black;
   
@@ -95,6 +97,7 @@ int main() {
         } else {
           if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
             isWhiteTurn = false;
+            history->addMove(pos[0], pos[1]);
           } else {
             cout << "Invalid Move!" << endl;
           }
@@ -106,6 +109,7 @@ int main() {
           
           if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
             isWhiteTurn = true;
+            history->addMove(pos[0], pos[1]);
           } else {
             cout << "Invalid Move!" << endl;
           }
@@ -178,11 +182,15 @@ int main() {
           } else {
             cout << "Invalid Board!" << endl;
           }
+        } else {
+          cout << "Invalid Command!" << endl;
         }
       }
-
+    } else if (command == "quit") {
+      break;
+    } else {
+      cout << "Invalid Command!" << endl;
     }
   }
-  
   return 0;
 }
