@@ -14,6 +14,14 @@ using namespace std;
 const int boardWidth = 8;
 const int boardHeight = 8;
 
+const int kingRowPos = 4;
+
+const vector<vector<int>> initialRookPos = {{0, 0}, {7, 0}, {0, 7}, {7, 7}};
+const vector<vector<int>> initialKnightPos = {{1, 0}, {6, 0}, {1, 7}, {6, 7}};
+const vector<vector<int>> initialBishopPos = {{2, 0}, {5, 0}, {2, 7}, {5, 7}};
+const vector<vector<int>> initialQueenPos = {{3, 0}, {3, 7}};
+const vector<vector<int>> initialKingPos = {{kingRowPos, 0}, {kingRowPos, 7}};
+
 class Piece; // forward declaration
 
 class Board {
@@ -24,7 +32,7 @@ class Board {
 	
 
 	public:
-		Board();
+		Board(bool empty = false);
 		~Board() = default;
 		Piece* pieceAt(int x, int y) const;
 

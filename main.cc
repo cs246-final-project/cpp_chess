@@ -11,8 +11,8 @@
 vector<int> getInputPosition(string arg) {
   if (arg.length() != 2) return vector<int> {};
   if (arg[1] < 49 || arg[1] > 56) return vector<int> {};
-  if (arg[0] >= 65 && arg[0] <= 72) return {arg[1] - 49, arg[0] - 65};
-  else if (arg[0] >= 97 && arg[0 <= 104]) return {arg[1] - 49, arg[0] - 97};
+  if (arg[0] >= 65 && arg[0] <= 72) return {7 - (arg[1] - 49), arg[0] - 65};
+  else if (arg[0] >= 97 && arg[0 <= 104]) return {7 - (arg[1] - 49), arg[0] - 97};
   else {
     return vector<int> {};
   }
@@ -132,6 +132,7 @@ int main() {
       view->displayBoard(*board.get());
     } else if(command == "setup"){
       setupMode = true;
+      board = make_unique<Board>(true);
       string arg;
       while(setupMode && cin >> command){
         if(command == "+"){
@@ -145,10 +146,18 @@ int main() {
           }
           switch(piece){ // make new piece based on input
             case 'p':
-              up = make_unique<Pawn>(false);
+              if (pos[1] == 0) {
+                up = make_unique<Pawn>(false);
+              } else {
+                up = make_unique<Pawn>(false, true);
+              }
               break;
             case 'r':
-              up = make_unique<Rook>(false);
+              if (pos[1] == 0 && (pos[0] == 0 || pos[0] == boardWidth - 1)) {
+                up = make_unique<Rook>(false);
+              } else {
+                up = make_unique<Rook>(false, true);
+              }
               break;
             case 'n':
               up = make_unique<Knight>(false);
@@ -160,13 +169,25 @@ int main() {
               up = make_unique<Queen>(false);
               break;
             case 'k':
-              up = make_unique<King>(false);
+              if (pos[1] == 0 && pos[0] == kingRowPos) {
+                up = make_unique<King>(false);
+              } else {
+                up = make_unique<King>(false, true);
+              }
               break;
             case 'P':
-              up = make_unique<Pawn>(true);
+              if (pos[1] == boardHeight - 1) {
+                up = make_unique<Pawn>(true);
+              } else {
+                up = make_unique<Pawn>(true, true);
+              }
               break;
             case 'R':
-              up = make_unique<Rook>(true);
+              if (pos[1] == boardHeight - 1 && (pos[0] == 0 || pos[0] == boardWidth - 1)) {
+                up = make_unique<Rook>(true);
+              } else {
+                up = make_unique<Rook>(true, true);
+              }
               break;
             case 'N':
               up = make_unique<Knight>(true);
@@ -178,7 +199,11 @@ int main() {
               up = make_unique<Queen>(true);
               break;
             case 'K':
-              up = make_unique<King>(true);
+              if (pos[1] == boardHeight - 1 && pos[0] == kingRowPos) {
+                up = make_unique<King>(true);
+              } else {
+                up = make_unique<King>(true, true);
+              }
               break;
             default:
               cout << "Invalid input!" << endl;

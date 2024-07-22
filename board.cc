@@ -1,12 +1,39 @@
 #include "board.h"
 
-Board::Board() {
+Board::Board(bool empty = false) {
   for (int i = 0; i < boardWidth; ++i) {
     std::vector<std::unique_ptr<Piece>> row(boardHeight); // Create a row with boardLength elements
     for (int j = 0; j < boardHeight; ++j) {
       row[j] = nullptr; // Initialize each element as nullptr
     }
     board.push_back(std::move(row)); // Move the row into the board
+  }
+  // if setup mode, return empty board
+  if (empty) return;
+  // place pieces for initial board
+  for (int i = 0; i < boardWidth; ++i) {
+    place(std::make_unique<Pawn>(false), i, 1);
+    place(std::make_unique<Pawn>(true), i, boardHeight - 2);
+  }
+  for (auto ele : initialRookPos) {
+    if (ele[1] == 0) place(std::make_unique<Rook>(false), ele[0], ele[1]);
+    else place(std::make_unique<Rook>(true), ele[0], ele[1]);
+  }
+  for (auto ele : initialKnightPos) {
+    if (ele[1] == 0) place(std::make_unique<Knight>(false), ele[0], ele[1]);
+    else place(std::make_unique<Knight>(true), ele[0], ele[1]);
+  }
+  for (auto ele : initialBishopPos) {
+    if (ele[1] == 0) place(std::make_unique<Bishop>(false), ele[0], ele[1]);
+    else place(std::make_unique<Bishop>(true), ele[0], ele[1]);
+  }
+  for (auto ele : initialQueenPos) {
+    if (ele[1] == 0) place(std::make_unique<Queen>(false), ele[0], ele[1]);
+    else place(std::make_unique<Queen>(true), ele[0], ele[1]);
+  }
+  for (auto ele : initialKingPos) {
+    if (ele[1] == 0) place(std::make_unique<King>(false), ele[0], ele[1]);
+    else place(std::make_unique<King>(true), ele[0], ele[1]);
   }
 }
 
@@ -72,7 +99,6 @@ void Board::place(unique_ptr<Piece> p, int posX, int posY){
   }
   board[posX][posY] = move(p);
   addPieceToAlive(posX, posY);
-
 }
 
 void Board::remove(int posX, int posY){
