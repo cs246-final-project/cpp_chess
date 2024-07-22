@@ -112,30 +112,39 @@ int main() {
         cout << "Invalid Move! (Not Your Piece)" << endl;
         continue;
       }
-      if(isWhiteTurn){
-        if(false/*white.isComputer()*/){
-          // white.move()
+      if (board->checkPromotion(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
+        // when promotion move
+        string promotion;
+        char promoChar;
+        cin >> promotion;
+        if (promotion.length() < 1) {
+          cout << "Need to specify promotion!" << endl;
+          continue;
+        }
+        if (promotion[0] >= 'a') {
+          promoChar = promotion[0] - ('a' - 'A');
         } else {
-          if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
-            isWhiteTurn = false;
-            history->addMove(pos[0], pos[1]);
-          } else {
-            cout << "Invalid Move!" << endl;
-            continue;
-          }
+          promoChar = promotion[0];
+        }
+        if (promoChar != 'Q' && promoChar != 'R' && promoChar != 'B' && promoChar != 'N'){
+          cout << "Invalid promotion input!" << endl;
+          continue;
+        }
+        if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1], promoChar)){
+          isWhiteTurn = !isWhiteTurn;
+          history->addMove(pos[0], pos[1]);
+        } else {
+          cout << "Invalid Move!" << endl;
+          continue;
         }
       } else {
-        if(false/*black.isComputer()*/){
-          // black.move()
+        // when normal move
+        if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
+          isWhiteTurn = !isWhiteTurn;
+          history->addMove(pos[0], pos[1]);
         } else {
-          
-          if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
-            isWhiteTurn = true;
-            history->addMove(pos[0], pos[1]);
-          } else {
-            cout << "Invalid Move!" << endl;
-            continue;
-          }
+          cout << "Invalid Move!" << endl;
+          continue;
         }
       }
       view->displayBoard(*board.get());
@@ -157,7 +166,6 @@ int main() {
             cout << "Invalid input!" << endl;
             break;
           }
-          cout << "x,y:" << pos[0] << pos[1] << endl;
           switch(piece){ // make new piece based on input
             case 'p':
               if (pos[1] == 0) {

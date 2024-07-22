@@ -42,6 +42,9 @@ class Board {
 		bool movePiece(int x, int y, int toX, int toY);
 		bool movePiece(int x, int y, int toX, int toY, char promotion);
 
+		// use when move is already validated
+		bool checkPromotion(int x, int y, int toX, int toY);
+
 		bool colorInCheck(bool isWhite, vector<int> kingPos);
 
 		bool validBoard();

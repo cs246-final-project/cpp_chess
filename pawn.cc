@@ -24,13 +24,13 @@ bool Pawn::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   // false if the destination has a piece of the same color
   if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   // false if the destination is backward
-  if (getIsWhite() && x < toX) return false;
-  if (!getIsWhite() && x > toX) return false;
+  if (getIsWhite() && y < toY) return false;
+  if (!getIsWhite() && y > toY) return false;
   if (x == toX) {
     // moving forward logic
     if (abs(y - toY) == 2) {
       // when moving 2 squares
-      if (didFirstMove) return false;
+      if (getDidFirstMove()) return false;
       // if there is a piece at destination, return false
       if (board.pieceAt(toX, toY) != nullptr) {
         return false;

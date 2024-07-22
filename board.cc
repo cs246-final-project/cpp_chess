@@ -86,13 +86,54 @@ bool Board::movePiece (int x, int y, int toX, int toY){
     removePieceFromAlive(x, y);
     board[toY][toX] = move(board[y][x]);
     addPieceToAlive(toX, toY);
+    if (dynamic_cast<Pawn*>(pieceAt(toX,toY)) != nullptr){
+      dynamic_cast<Pawn*>(pieceAt(toX,toY))->setDidFirstMove();
+    } else if (dynamic_cast<Rook*>(pieceAt(toX,toY)) != nullptr) {
+      dynamic_cast<Rook*>(pieceAt(toX,toY))->setDidFirstMove();
+    } else if (dynamic_cast<King*>(pieceAt(toX,toY)) != nullptr) {
+      dynamic_cast<King*>(pieceAt(toX,toY))->setDidFirstMove();
+    }
     return true;
   }
   return false;
 }
 
 bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
-  return true;
+  if (pieceAt(x,y) == nullptr) return false;
+  if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this)){
+    unique_ptr<Piece> p;
+    switch (promotion){
+      case 'Q':
+        p = make_unique<Queen>(pieceAt(x, y)->getIsWhite());
+        break;
+      case 'R':
+        p = make_unique<Rook>(pieceAt(x, y)->getIsWhite(), true);
+        break;
+      case 'N':
+        p = make_unique<Knight>(pieceAt(x, y)->getIsWhite());
+        break;
+      case 'B':
+        p = make_unique<Bishop>(pieceAt(x, y)->getIsWhite());
+        break;
+      default:
+        throw "Invalid promotion!";
+    }
+    remove(x, y);
+    place(move(p), toX, toY);
+    return true;
+  }
+  return false;
+}
+
+bool Board::checkPromotion(int x, int y, int toX, int toY) {
+  if (pieceAt(x, y) == nullptr) return false;
+  if (dynamic_cast<Pawn*>(pieceAt(x, y)) == nullptr) return false;
+  if (pieceAt(x, y)->getIsWhite() && toY == 0) {
+    return true;
+  }
+  if (!(pieceAt(x, y)->getIsWhite()) && toY == boardHeight - 1) {
+    return true;
+  }
 }
 
 void Board::place(unique_ptr<Piece> p, int posX, int posY){
