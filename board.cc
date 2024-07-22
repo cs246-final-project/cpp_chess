@@ -11,7 +11,7 @@ Board::Board() {
 }
 
 Piece* Board::pieceAt(int x, int y) const {
-  return board[x][y].get();
+  return board[y][x].get();
 }
 
 bool Board::colorInCheck(bool isWhite, vector<int> kingPos){
