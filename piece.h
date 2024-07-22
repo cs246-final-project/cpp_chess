@@ -7,8 +7,8 @@ using namespace std;
 class Board; // forward declaration
 
 class Piece {
-  int point;
   bool isWhite;
+  int point;
 public:
   Piece(const bool isWhite, const int point);
   virtual ~Piece() = default;

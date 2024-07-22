@@ -3,7 +3,7 @@
 
 int pawnPoint = 10;
 
-Pawn::Pawn(const bool isWhite, bool didFirstMove = false): Piece(isWhite, pawnPoint), didFirstMove{didFirstMove} {};
+Pawn::Pawn(const bool isWhite, bool didFirstMove): Piece(isWhite, pawnPoint), didFirstMove{didFirstMove} {};
 
 // get if the Pawn has moved. If true, the Pawn cannot move 2 squares
 bool Pawn::getDidFirstMove() {

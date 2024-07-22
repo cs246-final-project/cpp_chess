@@ -3,7 +3,7 @@
 
 int kingPoints = 900;
 
-King::King(const bool isWhite, bool didFirstMove = false): Piece(isWhite, kingPoints), didFirstMove{didFirstMove} {};
+King::King(const bool isWhite, bool didFirstMove): Piece(isWhite, kingPoints), didFirstMove{didFirstMove} {};
 
 // get if the King has moved. If true, the King cannot castle
 bool King::getDidFirstMove() {

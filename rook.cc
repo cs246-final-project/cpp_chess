@@ -3,7 +3,7 @@
 
 int rookPoint = 50;
 
-Rook::Rook(const bool isWhite, bool didFirstMove = false) : Piece{isWhite, rookPoint}, didFirstMove{didFirstMove} {}
+Rook::Rook(const bool isWhite, bool didFirstMove) : Piece{isWhite, rookPoint}, didFirstMove{didFirstMove} {}
 
 // get if the Rook has moved. If true, the Rook cannot castle
 bool Rook::getDidFirstMove() {

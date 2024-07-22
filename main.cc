@@ -11,8 +11,8 @@
 vector<int> getInputPosition(string arg) {
   if (arg.length() != 2) return vector<int> {};
   if (arg[1] < 49 || arg[1] > 56) return vector<int> {};
-  if (arg[0] >= 65 && arg[0] <= 72) return {7 - (arg[1] - 49), arg[0] - 65};
-  else if (arg[0] >= 97 && arg[0 <= 104]) return {7 - (arg[1] - 49), arg[0] - 97};
+  if (arg[0] >= 65 && arg[0] <= 72) return {arg[0] - 65, 7 - (arg[1] - 49)};
+  else if (arg[0] >= 97 && arg[0 <= 104]) return {arg[0] - 97, 7 - (arg[1] - 49)};
   else {
     return vector<int> {};
   }
@@ -84,6 +84,9 @@ int main() {
       }
       if (p1Valid && p2Valid) {
         gameStart = true;
+        view->displayBoard(*board.get());
+      } else {
+        cout << "Not valid player" << endl;
       }
     } else if(command == "resign") {
       isWhiteTurn ? ++blackPoints : ++whitePoints;
@@ -93,6 +96,10 @@ int main() {
     } else if(command == "move") {
       string from, to;
       cin >> from >> to;
+      if (!gameStart) {
+        cout << "Game not started!" << endl;
+        continue;
+      }
       vector<vector<int>> pos = getInputMovePosition(from, to);
       if (pos.empty()) {
         cout << "Invalid input!" << endl;
@@ -114,6 +121,7 @@ int main() {
             history->addMove(pos[0], pos[1]);
           } else {
             cout << "Invalid Move!" << endl;
+            continue;
           }
         }
       } else {
@@ -126,11 +134,16 @@ int main() {
             history->addMove(pos[0], pos[1]);
           } else {
             cout << "Invalid Move!" << endl;
+            continue;
           }
         }
       }
       view->displayBoard(*board.get());
     } else if(command == "setup"){
+      if (gameStart) {
+        cout << "Cannot enter setup mode while game is played" << endl;
+        continue;
+      }
       setupMode = true;
       board = make_unique<Board>(true);
       string arg;
@@ -142,8 +155,9 @@ int main() {
           vector<int> pos = getInputPosition(arg);
           if (pos.empty()) {
             cout << "Invalid input!" << endl;
-            continue;
+            break;
           }
+          cout << "x,y:" << pos[0] << pos[1] << endl;
           switch(piece){ // make new piece based on input
             case 'p':
               if (pos[1] == 0) {
@@ -210,7 +224,7 @@ int main() {
               break;
           }
           if (up != nullptr) {
-            board->place(move(up), pos[1], pos[0]);
+            board->place(move(up), pos[0], pos[1]);
             view->displayBoard(*board.get());
           }
         } else if(command == "-"){
@@ -220,7 +234,7 @@ int main() {
             cout << "Invalid input!" << endl;
             continue;
           }
-          board->remove(pos[1], pos[0]);
+          board->remove(pos[0], pos[1]);
           view->displayBoard(*board.get());
         } else if(command == "="){
           cin >> arg;
