@@ -5,6 +5,7 @@
 #include <string>
 #include <unistd.h>
 #include <png.h>
+#include <memory>
 #include "window.h"
 
 using namespace std;
@@ -76,16 +77,16 @@ void Xwindow::drawString(int colour, int x, int y, string msg) {
 
 void Xwindow::drawTile(int r, int c, string piece, bool isWhite){
   string fileName = piece + ".png";
-  FILE *fp = fopen(fileName.c_str(), "rb");
+  unique_ptr<FILE, decltype(&fclose)> fp(fopen(fileName.c_str(), "rb"), &fclose);
   png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   png_infop info_ptr = png_create_info_struct(png_ptr);
-  png_init_io(png_ptr, fp);
+  png_init_io(png_ptr, fp.get());
   png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
   int width = png_get_image_width(png_ptr, info_ptr);
   int height = png_get_image_height(png_ptr, info_ptr);
   png_bytep* row_pointers = png_get_rows(png_ptr, info_ptr);
   
-  char* data = (char*) malloc(width * height * 4);  // 4 bytes for ARGB
+  char* data = (char*) malloc(width * height * 4);
 
   for (int y = 0; y < height; y++) {
     png_bytep row = row_pointers[y];
@@ -93,18 +94,16 @@ void Xwindow::drawTile(int r, int c, string piece, bool isWhite){
       png_bytep px = &(row[x * 4]); 
       
       data[(y * width + x) * 4 + 3] = 255;  // A
-      data[(y * width + x) * 4 + 2] = (px[0] < 50 ? (isWhite ? 255 : 0) : ((r+c)%2 != 0 ? 187 : 234));  // R
-      data[(y * width + x) * 4 + 1] = (px[0] < 50 ? (isWhite ? 255 : 0) : ((r+c)%2 != 0 ? 190 : 240));  // G
+      data[(y * width + x) * 4 + 2] = (px[2] < 50 ? (isWhite ? 255 : 0) : ((r+c)%2 != 0 ? 187 : 234));  // R
+      data[(y * width + x) * 4 + 1] = (px[1] < 50 ? (isWhite ? 255 : 0) : ((r+c)%2 != 0 ? 190 : 240));  // G
       data[(y * width + x) * 4 + 0] = (px[0] < 50 ? (isWhite ? 255 : 0) : ((r+c)%2 != 0 ? 100 : 206));  // B
     }
   }
   XImage *ximg = XCreateImage(d, DefaultVisual(d, 0), 24, ZPixmap, 0, data, width, height, 32, 0);
   GC gc = XCreateGC(d, w, 0, NULL);
   XPutImage(d, w, gc, ximg, 0, 0, r*60, c*60, width, height);
-  XFlush(d);
-  fclose(fp);
-  XFreeGC(d, gc);
   XDestroyImage(ximg);
+  XFreeGC(d, gc);
   png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-  free(data);
+  png_destroy_info_struct(png_ptr, &info_ptr);
 }
