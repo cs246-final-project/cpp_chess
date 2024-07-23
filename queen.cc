@@ -5,6 +5,10 @@ int queenPoint = 90;
 
 Queen::Queen(const bool isWhite): Piece(isWhite, queenPoint) {}
 
+unique_ptr<Piece> Queen::clone() const {
+  return make_unique<Queen>(*this);
+}
+
 // Check if the move is legal for the Queen
 // all current and to should be guaranteed to be in the board
 bool Queen::isMoveLegal(int x, int y, int toX, int toY, Board &board) {

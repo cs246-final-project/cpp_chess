@@ -5,6 +5,10 @@ int bishopPoint = 30;
 
 Bishop::Bishop(const bool isWhite) : Piece(isWhite, bishopPoint) {};
 
+unique_ptr<Piece> Bishop::clone() const {
+  return make_unique<Bishop>(*this);
+}
+
 // Check if the move is legal for the Bishop
 // all current and to should be guaranteed to be in the board
 bool Bishop::isMoveLegal(int x, int y, int toX, int toY, Board &board) {

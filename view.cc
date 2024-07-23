@@ -1,11 +1,12 @@
 #include "view.h"
 
 void View::displayBoard(const Board &board){
-  for(int i = 0; i < boardWidth; i++){
-    for(int j = 0; j < boardHeight; j++){
-      Piece* p = board.pieceAt(i, j);
+  for(int i = 0; i < boardHeight; i++){
+    cout << 8 - i << ' ';
+    for(int j = 0; j < boardWidth; j++){
+      Piece* p = board.pieceAt(j, i);
       if(p == nullptr){
-        (i+j)%2 == 0 ? cout << ' ' : cout << '_';
+        (j)%2 == 0 ? cout << '_' : cout << ' ';
       } else {
         char c = getPieceChar(p);
         if(p->getIsWhite()) c -= 'a'-'A';
@@ -14,6 +15,7 @@ void View::displayBoard(const Board &board){
     }
     cout << endl;
   }
+  cout << "  abcdefgh" << endl;
 }
 void View::update(vector<vector<int>> coords){
   for(auto pos : coords){
