@@ -120,6 +120,14 @@ bool Board::movePiece (int x, int y, int toX, int toY){
       dynamic_cast<King*>(pieceAt(toX,toY))->setDidFirstMove();
     }
     history.addMove({x,y}, {toX, toY});
+    // if the move is castling, move the rook
+    if (dynamic_cast<King*>(pieceAt(toX, toY)) != nullptr && abs(x - toX) == 2){
+      if (toX > x){
+        board[toY][toX - 1] = move(board[toY][7]);
+      } else {
+        board[toY][toX + 1] = move(board[toY][0]);
+      }
+    }
     return true;
   }
   return false;
@@ -162,6 +170,7 @@ bool Board::checkPromotion(int x, int y, int toX, int toY) {
   if (!(pieceAt(x, y)->getIsWhite()) && toY == boardHeight - 1) {
     return true;
   }
+  return false;
 }
 
 void Board::place(unique_ptr<Piece> p, int posX, int posY){

@@ -22,8 +22,26 @@ void King::setDidFirstMove() {
 // Check if the move is legal for the King
 // all current and to should be guaranteed to be in the board
 bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
-  if (!didFirstMove) {
-    // TODO: check for castling and return true if it is a castling move
+  if (!didFirstMove && y == toY && abs(x - toX) == 2) {
+    if (toX > x) {
+      for (int i = x + 1; i < boardWidth - 1; ++i) {
+        if (board.pieceAt(i, y) != nullptr) {
+          return false;
+        }
+      }
+      if (dynamic_cast<Rook*>(board.pieceAt(boardWidth - 1, y)) != nullptr && !(dynamic_cast<Rook*>(board.pieceAt(boardWidth - 1, y))->getDidFirstMove())){
+        return true;
+      }
+    } else {
+      for (int i = x - 1; i > 0; --i) {
+        if (board.pieceAt(i, y) != nullptr) {
+          return false;
+        }
+      }
+      if (dynamic_cast<Rook*>(board.pieceAt(0, y)) != nullptr && !(dynamic_cast<Rook*>(board.pieceAt(0, y))->getDidFirstMove())){
+        return true;
+      }
+    }
   }
   // false if the destination is same as current location
   if (abs(x - toX) > 1 || abs(y - toY) > 1) {
@@ -50,12 +68,35 @@ vector<vector<int>> King::getLegalMoves(vector<int> current, Board &board) {
       if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8) continue;
       // false if the destination has a piece of the same color
       if (board.pieceAt(newX, newY) != nullptr && board.pieceAt(newX, newY)->getIsWhite() == this->getIsWhite()) continue;
-      // TODO: check if the King is in check after the move
       legalMoves.push_back({newX, newY});
     }
   }
   if (!didFirstMove) {
-    // TODO: check for castling and add the legal moves for castling
+    if (board.pieceAt(0, current[1]) != nullptr && dynamic_cast<Rook*>(board.pieceAt(0, current[1])) != nullptr && !(dynamic_cast<Rook*>(board.pieceAt(0, current[1]))->getDidFirstMove())) {
+      bool canCastle = true;
+      for (int i = 1; i < current[0]; ++i) {
+        if (board.pieceAt(i, current[1]) != nullptr) {
+          canCastle = false;
+          break;
+        }
+      }
+      if (canCastle) {
+        legalMoves.push_back({current[0] - 2, current[1]});
+      }
+    }
+    if (board.pieceAt(boardWidth - 1, current[1]) != nullptr && dynamic_cast<Rook*>(board.pieceAt(boardWidth - 1, current[1])) != nullptr && !(dynamic_cast<Rook*>(board.pieceAt(boardWidth - 1, current[1]))->getDidFirstMove())) {
+      bool canCastle = true;
+      for (int i = current[0] + 1; i < boardWidth - 1; ++i) {
+        if (board.pieceAt(i, current[1]) != nullptr) {
+          canCastle = false;
+          break;
+        }
+      }
+      if (canCastle) {
+        legalMoves.push_back({current[0] + 2, current[1]});
+      }
+    }
   }
+  // TODO: check if the King is in check after the move and filter it out
   return legalMoves;
 }
