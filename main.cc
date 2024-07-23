@@ -6,12 +6,29 @@
 #include <memory>
 #include <map>
 
-int getRow(char c){
-  return 7-(c-49);
-}
-int getCol(char c){
-  if(c < 90) c += 32;
-  return c -= 97;
+// cast string input to vector of int (position)
+vector<int> getInputPosition(string arg) {
+  if (arg.length() != 2) return vector<int> {};
+  if (arg[1] < 49 || arg[1] > 56) return vector<int> {};
+  if (arg[0] >= 65 && arg[0] <= 72) return {arg[0] - 65, 7 - (arg[1] - 49)};
+  else if (arg[0] >= 97 && arg[0 <= 104]) return {arg[0] - 97, 7 - (arg[1] - 49)};
+  else {
+    return vector<int> {};
+  }
+};
+
+// cast string input "from" and "to" to vector of position
+vector<vector<int>> getInputMovePosition(string from, string to) {
+  vector<vector<int>> pos;
+  // cast string input "from" to vector of position
+  vector<int> fromPos = getInputPosition(from);
+  if (fromPos.empty()) return vector<vector<int>> {};
+  pos.push_back(fromPos);
+  // cast string input "to" to vector of position
+  vector<int> toPos = getInputPosition(to);
+  if (toPos.empty()) return vector<vector<int>> {};
+  pos.push_back(toPos);
+  return pos;
 }
 
 int main() {
@@ -29,56 +46,60 @@ int main() {
   while(cin >> command){
     if(command == "game"){
       string p1, p2;
+      bool p1Valid, p2Valid = false;
       cin >> p1 >> p2;
       if(p1 == "human"){
+        p1Valid = true;
         // white = move(make_unique(human));
       } else if(p1 == "computer1") {
+        p1Valid = true;
         // white = move(make_unique(cpu1));
       } else if(p1 == "computer2") {
+        p1Valid = true;
         // white = move(make_unique(cpu2));
       } else if(p1 == "computer3") {
+        p1Valid = true;
         // white = move(make_unique(cpu3));
       } else if(p1 == "computer4") {
+        p1Valid = true;
         // white = move(make_unique(cpu4));
       }
       if(p2 == "human"){
+        p2Valid = true;
         // black = move(make_unique(human));
       } else if(p2 == "computer1") {
+        p2Valid = true;
         // black = move(make_unique(cpu1));
       } else if(p2 == "computer2") {
+        p2Valid = true;
         // black = move(make_unique(cpu2));
       } else if(p2 == "computer3") {
+        p2Valid = true;
         // black = move(make_unique(cpu3));
       } else if(p2 == "computer4") {
+        p2Valid = true;
         // black = move(make_unique(cpu4));
+      }
+      if (p1Valid && p2Valid) {
+        gameStart = true;
+        view->displayBoard(*board.get());
+      } else {
+        cout << "Not valid player" << endl;
       }
     } else if(command == "resign") {
       isWhiteTurn ? ++blackPoints : ++whitePoints;
       unique_ptr<Board> temp = make_unique<Board>();
       swap(board, temp);
+      gameStart = false;
     } else if(command == "move") {
       string from, to;
       cin >> from >> to;
-      if (from.length() < 2 || to.length() < 2) {
-        cout << "Invalid input!" << endl;
+      if (!gameStart) {
+        cout << "Game not started!" << endl;
         continue;
       }
-      vector<vector<int>> pos;
-      // cast string input "from" to vector of positions
-      if (from[0] >= 65 && from[0] <= 72) pos.push_back({from[1] - 49, from[0] - 65});
-      else if (from[0] >= 97 && from[0 <= 104]) pos.push_back({from[1] - 49, from[0] - 97});
-      else {
-        cout << "Invalid input!" << endl;
-        continue;
-      }
-      // cast string input "to" to vector of positions
-      if (to[0] >= 65 && to[0] <= 72) pos.push_back({to[1] - 49, to[0] - 65});
-      else if (to[0] >= 97 && to[0 <= 104]) pos.push_back({to[1] - 49, to[0] - 97});
-      else {
-        cout << "Invalid input!" << endl;
-        continue;
-      }
-      if (pos[0][0] < 0 || pos[0][0] > 7 || pos[1][0] < 0 || pos[1][0] > 7) {
+      vector<vector<int>> pos = getInputMovePosition(from, to);
+      if (pos.empty()) {
         cout << "Invalid input!" << endl;
         continue;
       }
@@ -89,43 +110,72 @@ int main() {
         cout << "Invalid Move! (Not Your Piece)" << endl;
         continue;
       }
-      if(isWhiteTurn){
-        if(false/*white.isComputer()*/){
-          // white.move()
+      if (board->checkPromotion(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
+        // when promotion move
+        string promotion;
+        char promoChar;
+        cin >> promotion;
+        if (promotion.length() < 1) {
+          cout << "Need to specify promotion!" << endl;
+          continue;
+        }
+        if (promotion[0] >= 'a') {
+          promoChar = promotion[0] - ('a' - 'A');
         } else {
-          if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
-            isWhiteTurn = false;
-          } else {
-            cout << "Invalid Move!" << endl;
-          }
+          promoChar = promotion[0];
+        }
+        if (promoChar != 'Q' && promoChar != 'R' && promoChar != 'B' && promoChar != 'N'){
+          cout << "Invalid promotion input!" << endl;
+          continue;
+        }
+        if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1], promoChar)){
+          isWhiteTurn = !isWhiteTurn;
+        } else {
+          cout << "Invalid Move!" << endl;
+          continue;
         }
       } else {
-        if(false/*black.isComputer()*/){
-          // black.move()
+        // when normal move
+        if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
+          isWhiteTurn = !isWhiteTurn;
         } else {
-          
-          if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
-            isWhiteTurn = true;
-          } else {
-            cout << "Invalid Move!" << endl;
-          }
+          cout << "Invalid Move!" << endl;
+          continue;
         }
       }
       view->displayBoard(*board.get());
     } else if(command == "setup"){
+      if (gameStart) {
+        cout << "Cannot enter setup mode while game is played" << endl;
+        continue;
+      }
       setupMode = true;
-      string arg1, arg2;
+      board = make_unique<Board>(true);
+      string arg;
       while(setupMode && cin >> command){
         if(command == "+"){
           char piece;
-          cin >> piece >> arg2;
+          cin >> piece >> arg;
           unique_ptr<Piece> up;
+          vector<int> pos = getInputPosition(arg);
+          if (pos.empty()) {
+            cout << "Invalid input!" << endl;
+            break;
+          }
           switch(piece){ // make new piece based on input
             case 'p':
-              up = make_unique<Pawn>(false);
+              if (pos[1] == 0) {
+                up = make_unique<Pawn>(false);
+              } else {
+                up = make_unique<Pawn>(false, true);
+              }
               break;
             case 'r':
-              up = make_unique<Rook>(false);
+              if (pos[1] == 0 && (pos[0] == 0 || pos[0] == boardWidth - 1)) {
+                up = make_unique<Rook>(false);
+              } else {
+                up = make_unique<Rook>(false, true);
+              }
               break;
             case 'n':
               up = make_unique<Knight>(false);
@@ -137,13 +187,25 @@ int main() {
               up = make_unique<Queen>(false);
               break;
             case 'k':
-              up = make_unique<King>(false);
+              if (pos[1] == 0 && pos[0] == kingRowPos) {
+                up = make_unique<King>(false);
+              } else {
+                up = make_unique<King>(false, true);
+              }
               break;
             case 'P':
-              up = make_unique<Pawn>(true);
+              if (pos[1] == boardHeight - 1) {
+                up = make_unique<Pawn>(true);
+              } else {
+                up = make_unique<Pawn>(true, true);
+              }
               break;
             case 'R':
-              up = make_unique<Rook>(true);
+              if (pos[1] == boardHeight - 1 && (pos[0] == 0 || pos[0] == boardWidth - 1)) {
+                up = make_unique<Rook>(true);
+              } else {
+                up = make_unique<Rook>(true, true);
+              }
               break;
             case 'N':
               up = make_unique<Knight>(true);
@@ -155,34 +217,47 @@ int main() {
               up = make_unique<Queen>(true);
               break;
             case 'K':
-              up = make_unique<King>(true);
+              if (pos[1] == boardHeight - 1 && pos[0] == kingRowPos) {
+                up = make_unique<King>(true);
+              } else {
+                up = make_unique<King>(true, true);
+              }
               break;
             default:
               cout << "Invalid input!" << endl;
               break;
           }
           if (up != nullptr) {
-            board->place(move(up), getRow(arg2[1]), getCol(arg2[0]));
+            board->place(move(up), pos[0], pos[1]);
             view->displayBoard(*board.get());
           }
         } else if(command == "-"){
-          cin >> arg1;
-          board->remove(getRow(arg2[1]), getCol(arg2[0]));
+          cin >> arg;
+          vector<int> pos = getInputPosition(arg);
+          if (pos.empty()) {
+            cout << "Invalid input!" << endl;
+            continue;
+          }
+          board->remove(pos[0], pos[1]);
           view->displayBoard(*board.get());
         } else if(command == "="){
-          cin >> arg1;
-          arg1 == "white" ? isWhiteTurn = true : isWhiteTurn = false;
+          cin >> arg;
+          arg == "white" ? isWhiteTurn = true : isWhiteTurn = false;
         } else if(command == "done"){
           if(board->validBoard()){
             setupMode = false;
           } else {
             cout << "Invalid Board!" << endl;
           }
+        } else {
+          cout << "Invalid Command!" << endl;
         }
       }
-
+    } else if (command == "quit") {
+      break;
+    } else {
+      cout << "Invalid Command!" << endl;
     }
   }
-  
   return 0;
 }

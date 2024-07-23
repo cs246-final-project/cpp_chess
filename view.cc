@@ -5,7 +5,6 @@ View::View(Board *board) : board{board}{
 }
 
 void View::displayBoard(const Board &board){
-
   for(int i = 0; i < boardWidth; i++){
     for(int j = 0; j < boardHeight; j++){
       int posX = i*60;

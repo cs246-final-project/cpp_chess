@@ -3,7 +3,11 @@
 
 int rookPoint = 50;
 
-Rook::Rook(const bool isWhite) : Piece{isWhite, rookPoint}, didFirstMove{false} {}
+Rook::Rook(const bool isWhite, bool didFirstMove) : Piece{isWhite, rookPoint}, didFirstMove{didFirstMove} {}
+
+unique_ptr<Piece> Rook::clone() const {
+  return make_unique<Rook>(*this);
+}
 
 // get if the Rook has moved. If true, the Rook cannot castle
 bool Rook::getDidFirstMove() {
