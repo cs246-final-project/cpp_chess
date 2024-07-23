@@ -6,16 +6,16 @@ View::View(Board *board) : board{board}{
 
 void View::displayBoard(const Board &board){
 
-  for(int i = 0; i < boardWidth; i++){
-    for(int j = 0; j < boardHeight; j++){
-      int posX = i*60;
-      int posY = j*60;
+  for(int i = 0; i < boardHeight; i++){
+    for(int j = 0; j < boardWidth; j++){
+      int posX = j*60;
+      int posY = i*60;
       if((i+j)%2 == 0){
         w->fillRectangle(posX, posY, 60, 60, 0);
       } else {
         w->fillRectangle(posX, posY, 60, 60, 1);
       }
-      Piece* p = board.pieceAt(i, j);
+      Piece* p = board.pieceAt(j, i);
       if(p == nullptr){
         (i+j)%2 == 0 ? cout << ' ' : cout << '_';
       } else {
