@@ -21,7 +21,7 @@ EXEC = a.out					# executable name
 .PHONY : clean					# not file names
 
 ${EXEC} : ${OBJECTS}				# link step
-	${CXX} ${CXXFLAGS} $^ -o $@		# additional object files before $^
+	${CXX} ${CXXFLAGS} $^ -o $@	-lX11 -lpng # additional object files before $^
 
 ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 
