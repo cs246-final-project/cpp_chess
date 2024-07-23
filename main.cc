@@ -38,7 +38,7 @@ int main() {
   int whitePoints, blackPoints;
 
   unique_ptr<Board> board = make_unique<Board>();
-  unique_ptr<View> view = make_unique<View>();
+  unique_ptr<View> view = make_unique<View>(board.get());
   // unique_ptr<Player> white;
   // unique_ptr<Player> black;
   
