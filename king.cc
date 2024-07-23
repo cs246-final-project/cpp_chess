@@ -15,6 +15,7 @@ bool King::getDidFirstMove() {
 }
 
 // set the King to have moved
+// TODO: if King is checked, set didFirstMove to true
 void King::setDidFirstMove() {
   didFirstMove = true;
 }
@@ -51,7 +52,6 @@ bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) {
     return false;
   }
-  // TODO: check if the King is in check after the move
   return true;
 }
 

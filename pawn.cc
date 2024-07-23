@@ -24,7 +24,13 @@ void Pawn::setDidFirstMove() {
 bool Pawn::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
-  // TODO: check for en passant
+  // check for en passant
+  if (board.lastMove().size() > 0) {
+    vector<vector<int>> history = board.lastMove();
+    if (dynamic_cast<Pawn*>(board.pieceAt(history[1][0], history[1][1])) != nullptr && board.pieceAt(history[1][0], history[1][1])->getIsWhite() != this->getIsWhite() && abs(history[1][1] - history[0][1]) == 2 && history[1][0] == toX && history[1][1] == toY && (history[1][0] == x + 1 || history[1][0] == x - 1) && history[1][1] == y) {
+      return true;
+    };
+  }
   // false if the destination has a piece of the same color
   if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   // false if the destination is backward
@@ -85,7 +91,13 @@ vector<vector<int>> Pawn::getLegalMoves(vector<int> current, Board &board) {
     if (current[1] - 1 >= 0 && current[1] - 1 < 8 && board.pieceAt(current[0] - 1, current[1] + direction) != nullptr && board.pieceAt(current[0] - 1, current[1] + direction)->getIsWhite() != getIsWhite()) {
       legalMoves.push_back({current[0] + direction, current[1] - 1});
     }
-    // TODO: check for en passant
-  }
+    // check for en passant
+    if (board.lastMove().size() > 0) {
+      vector<vector<int>> history = board.lastMove();
+      if (dynamic_cast<Pawn*>(board.pieceAt(history[1][0], history[1][1])) != nullptr && board.pieceAt(history[1][0], history[1][1])->getIsWhite() != this->getIsWhite() && abs(history[1][1] - history[0][1]) == 2 && history[1][0] == current[0] && history[1][1] == current[1] && (history[1][0] == current[0] + 1 || history[1][0] == current[0] - 1)) {
+        legalMoves.push_back({history[1][0], history[1][1]});
+      }
+    }
+  } 
   return legalMoves;
 }

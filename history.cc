@@ -23,5 +23,6 @@ void History::addMove(vector<int> from, vector<int> to){
   history.emplace_back(move(hc));
 }
 vector<vector<int>> History::getLast(){
+  if (history.empty()) return vector<vector<int>>{};
   return vector<vector<int>>{history.back()->getFrom(), history.back()->getTo()};
 }
