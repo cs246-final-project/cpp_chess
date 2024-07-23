@@ -9,6 +9,10 @@ using namespace std;
 class History {
   vector<unique_ptr<HistoryComponent>> history;
 public:
+    History();
+    ~History() = default;
+    History(const History& other);
+    History& operator=(const History& other);
     void addMove(vector<int> from, vector<int> to);
     vector<vector<int>> getLast();
 };

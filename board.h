@@ -28,12 +28,17 @@ class Board {
 	vector<vector<unique_ptr<Piece>>> board;
 	vector<vector<int>> aliveWhite;
 	vector<vector<int>> aliveBlack;
-	unique_ptr<History> history;
+	History history;
 	
 
 	public:
 		Board(bool empty = false);
 		~Board() = default;
+
+		Board(const Board &other);
+		Board& operator=(const Board &other);
+
+
 		Piece* pieceAt(int x, int y) const;
 
 		vector<vector<int>> getAliveWhite();
@@ -57,8 +62,6 @@ class Board {
 		vector<vector<int>> lastMove();
 
 		bool willCheck(vector<int> from, vector<int> to);
-
-		Board(const Board &other);
 };
 
 #endif

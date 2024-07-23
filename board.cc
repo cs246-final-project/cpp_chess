@@ -1,9 +1,9 @@
 #include "board.h"
 
 Board::Board(bool empty) {
-  for (int i = 0; i < boardWidth; ++i) {
-    vector<unique_ptr<Piece>> row(boardHeight); // Create a row with boardLength elements
-    for (int j = 0; j < boardHeight; ++j) {
+  for (int i = 0; i < boardHeight; ++i) {
+    vector<unique_ptr<Piece>> row(boardWidth); // Create a row with boardLength elements
+    for (int j = 0; j < boardWidth; ++j) {
       row[j] = nullptr; // Initialize each element as nullptr
     }
     board.push_back(move(row)); // Move the row into the board
@@ -37,6 +37,32 @@ Board::Board(bool empty) {
     unique_ptr<Piece> pKing = ele[1] == 0 ? make_unique<King>(false) : make_unique<King>(true);
     place(move(pKing), ele[0], ele[1]);
   }
+}
+
+Board::Board(const Board &other) 
+  : aliveWhite(other.aliveWhite), aliveBlack(other.aliveBlack) {
+  for (int i = 0; i < boardHeight; ++i) {
+    vector<unique_ptr<Piece>> row(boardWidth);
+    for (int j = 0; j < boardWidth; ++j) {
+      if (other.board[i][j]) {
+        row[j] = other.board[i][j]->clone();
+      }
+    }
+    board.push_back(move(row));
+  }
+  history = other.history;
+}
+
+Board& Board::operator=(const Board &other) {
+  if (this == &other) {
+    return *this;
+  }
+  Board temp(other);
+  swap(board, temp.board);
+  swap(aliveWhite, temp.aliveWhite);
+  swap(aliveBlack, temp.aliveBlack);
+  swap(history, temp.history);
+  return *this;
 }
 
 Piece* Board::pieceAt(int x, int y) const {
@@ -93,6 +119,7 @@ bool Board::movePiece (int x, int y, int toX, int toY){
     } else if (dynamic_cast<King*>(pieceAt(toX,toY)) != nullptr) {
       dynamic_cast<King*>(pieceAt(toX,toY))->setDidFirstMove();
     }
+    history.addMove({x,y}, {toX, toY});
     return true;
   }
   return false;
@@ -120,6 +147,7 @@ bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
     }
     remove(x, y);
     place(move(p), toX, toY);
+    history.addMove({x,y}, {toX, toY});
     return true;
   }
   return false;
@@ -150,7 +178,7 @@ void Board::remove(int posX, int posY){
 }
 
 vector<vector<int>> Board::lastMove(){
-  return history->getLast();
+  return history.getLast();
 }
 
 bool Board::willCheck(vector<int> from, vector<int> to){

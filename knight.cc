@@ -5,6 +5,10 @@ int knightPoint = 30;
 
 Knight::Knight(const bool isWhite): Piece(isWhite, knightPoint) {}
 
+unique_ptr<Piece> Knight::clone() const {
+  return make_unique<Knight>(*this);
+}
+
 // Check if the move is legal for the Knight
 // all current and to should be guaranteed to be in the board
 bool Knight::isMoveLegal(int x, int y, int toX, int toY, Board &board) {

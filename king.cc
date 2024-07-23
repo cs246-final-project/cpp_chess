@@ -5,6 +5,10 @@ int kingPoints = 900;
 
 King::King(const bool isWhite, bool didFirstMove): Piece(isWhite, kingPoints), didFirstMove{didFirstMove} {};
 
+unique_ptr<Piece> King::clone() const {
+  return make_unique<King>(*this);
+}
+
 // get if the King has moved. If true, the King cannot castle
 bool King::getDidFirstMove() {
   return didFirstMove;

@@ -5,6 +5,10 @@ int pawnPoint = 10;
 
 Pawn::Pawn(const bool isWhite, bool didFirstMove): Piece(isWhite, pawnPoint), didFirstMove{didFirstMove} {};
 
+unique_ptr<Piece> Pawn::clone() const {
+  return make_unique<Pawn>(*this);
+}
+
 // get if the Pawn has moved. If true, the Pawn cannot move 2 squares
 bool Pawn::getDidFirstMove() {
   return didFirstMove;
