@@ -46,12 +46,14 @@ class Board {
 
 		bool movePiece(int x, int y, int toX, int toY);
 		bool movePiece(int x, int y, int toX, int toY, char promotion);
+		void movePieceWithoutValidation(int x, int y, int toX, int toY);
 
 		// use when move is already validated
 		bool checkPromotion(int x, int y, int toX, int toY);
 
 		bool colorInCheck(bool isWhite, vector<int> kingPos);
-		bool isCheckMate(const Board &other, bool checkWhite);
+    bool colorInCheck(bool isWhite);
+    bool isCheckMate(const Board &other, bool checkWhite);
 
 		bool validBoard();
 

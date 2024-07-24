@@ -71,9 +71,20 @@ Piece* Board::pieceAt(int x, int y) const {
 
 bool Board::colorInCheck(bool isWhite, vector<int> kingPos){
   for(auto pos : (isWhite ? aliveBlack : aliveWhite)){
-    if(pieceAt(pos[0], pos[1])->isMoveLegal(pos[0], pos[1], kingPos[0], kingPos[1], *this)) return true;
+    if(pieceAt(pos[0], pos[1])->isMoveLegal(pos[0], pos[1], kingPos[0], kingPos[1], *this, true)) return true;
   }
   return false;
+}
+
+bool Board::colorInCheck(bool isWhite){
+  vector<int> kingPos;
+  for(auto pos : (isWhite ? aliveWhite : aliveBlack)){
+    if(dynamic_cast<King*>(pieceAt(pos[0], pos[1])) != nullptr){
+      kingPos = pos;
+      break;
+    }
+  }
+  return colorInCheck(isWhite, kingPos);
 }
 
 bool Board::isCheckMate(const Board &other, bool checkWhite){
@@ -127,7 +138,8 @@ bool Board::validBoard(){
 
 bool Board::movePiece (int x, int y, int toX, int toY){
   if (pieceAt(x,y) == nullptr) return false;
-  if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this)){
+  if (x == toX && y == toY) return false;
+  if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this, false)){
     if (pieceAt(toX, toY) != nullptr){
       remove(toX, toY);
     }
@@ -157,7 +169,7 @@ bool Board::movePiece (int x, int y, int toX, int toY){
 
 bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
   if (pieceAt(x,y) == nullptr) return false;
-  if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this)){
+  if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this, false)){
     unique_ptr<Piece> p;
     switch (promotion){
       case 'Q':
@@ -181,6 +193,31 @@ bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
     return true;
   }
   return false;
+}
+
+void Board::movePieceWithoutValidation(int x, int y, int toX, int toY) {
+  if (pieceAt(toX, toY) != nullptr){
+    remove(toX, toY);
+  }
+  removePieceFromAlive(x, y);
+  board[toY][toX] = move(board[y][x]);
+  addPieceToAlive(toX, toY);
+  if (dynamic_cast<Pawn*>(pieceAt(toX,toY)) != nullptr){
+    dynamic_cast<Pawn*>(pieceAt(toX,toY))->setDidFirstMove();
+  } else if (dynamic_cast<Rook*>(pieceAt(toX,toY)) != nullptr) {
+    dynamic_cast<Rook*>(pieceAt(toX,toY))->setDidFirstMove();
+  } else if (dynamic_cast<King*>(pieceAt(toX,toY)) != nullptr) {
+    dynamic_cast<King*>(pieceAt(toX,toY))->setDidFirstMove();
+  }
+  history.addMove({x,y}, {toX, toY});
+  // if the move is castling, move the rook
+  if (dynamic_cast<King*>(pieceAt(toX, toY)) != nullptr && abs(x - toX) == 2){
+    if (toX > x){
+      board[toY][toX - 1] = move(board[toY][7]);
+    } else {
+      board[toY][toX + 1] = move(board[toY][0]);
+    }
+  }
 }
 
 bool Board::checkPromotion(int x, int y, int toX, int toY) {

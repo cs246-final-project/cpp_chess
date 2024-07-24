@@ -10,8 +10,7 @@ void View::displayBoard(){
     for(int j = 0; j < boardWidth; j++){
       int posX = j*60;
       int posY = i*60;
-      
-      Piece* p = board->pieceAt(j, i);
+      Piece* p = board.pieceAt(j, i);
       if(p == nullptr){
         if((i+j)%2 == 0){
           w->fillRectangle(posX, posY, 60, 60, 0);
@@ -19,6 +18,11 @@ void View::displayBoard(){
           w->fillRectangle(posX, posY, 60, 60, 1);
         }
         (i+j)%2 == 0 ? cout << ' ' : cout << '_';
+        if((i+j)%2 == 0){
+          w->fillRectangle(posX, posY, 60, 60, 0);
+        } else {
+          w->fillRectangle(posX, posY, 60, 60, 1);
+        }
       } else {
         char c = getPieceChar(p);
         cout << c;
