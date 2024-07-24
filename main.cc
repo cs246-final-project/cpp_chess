@@ -128,8 +128,10 @@ int main() {
           cout << "Invalid promotion input!" << endl;
           continue;
         }
-        if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1], promoChar)){
-          view->update(pos);
+        vector<vector<int>> positions;
+        positions = board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1], promoChar);
+        if (positions.size() != 0){
+          view->update(positions);
           isWhiteTurn = !isWhiteTurn;
         } else {
           cout << "Invalid Move!" << endl;
@@ -137,15 +139,17 @@ int main() {
         }
       } else {
         // when normal move
-        if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
-          view->update(pos); 
+        vector<vector<int>> positions;
+        positions = board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1]);
+        if (positions.size() != 0){
+          view->update(positions);
           isWhiteTurn = !isWhiteTurn;
         } else {
           cout << "Invalid Move!" << endl;
           continue;
         }
       }
-      if(board->isCheckMate(board.get(), isWhiteTurn)){
+      if(board->isCheckMate(isWhiteTurn)){
         isWhiteTurn ? ++blackPoints : ++whitePoints;
         isWhiteTurn = true;
         gameStart = false;
@@ -236,7 +240,7 @@ int main() {
           }
           if (up != nullptr) {
             board->place(move(up), pos[0], pos[1]);
-            view->update(pos);
+            view->update(vector<vector<int>>{pos});
           }
         } else if(command == "-"){
           cin >> arg;
@@ -246,7 +250,7 @@ int main() {
             continue;
           }
           board->remove(pos[0], pos[1]);
-          view->update(pos);
+          view->update(vector<vector<int>>{pos});
         } else if(command == "="){
           cin >> arg;
           arg == "white" ? isWhiteTurn = true : isWhiteTurn = false;
