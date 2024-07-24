@@ -10,7 +10,7 @@ void View::displayBoard(){
     for(int j = 0; j < boardWidth; j++){
       int posX = j*60;
       int posY = i*60;
-      Piece* p = board.pieceAt(j, i);
+      Piece* p = board->pieceAt(j, i);
       if(p == nullptr){
         if((i+j)%2 == 0){
           w->fillRectangle(posX, posY, 60, 60, 0);
@@ -86,4 +86,5 @@ string View::getPieceString(Piece* p){
   if(dynamic_cast<Bishop*>(p) != nullptr) return "bishop";
   if(dynamic_cast<Queen*>(p) != nullptr) return "queen";
   if(dynamic_cast<King*>(p) != nullptr) return "king";
+  return "";
 }

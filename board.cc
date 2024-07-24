@@ -87,10 +87,10 @@ bool Board::colorInCheck(bool isWhite){
   return colorInCheck(isWhite, kingPos);
 }
 
-bool Board::isCheckMate(const Board &other, bool checkWhite){
-  Board tempBoard = other;
+bool Board::isCheckMate(bool checkWhite){
+  Board tempBoard = *this;
   vector<int> kingPos;
-  vector<vector<int>> positions = (checkWhite ? tempBoard.getAliveWhite() : tempBoard.getAliveBlack());
+  vector<vector<int>> positions = (checkWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
 
   for(auto pos : positions){
     if(tempBoard.pieceAt(pos[0], pos[1])) kingPos = pos;
