@@ -15,7 +15,7 @@ class View {
   string getPieceString(Piece* p);
   public:
     View(Board *board);
-    void displayBoard(const Board &board);
+    void displayBoard();
     void update(vector<vector<int>> coords);
 };
 

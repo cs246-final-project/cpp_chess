@@ -82,7 +82,7 @@ int main() {
       }
       if (p1Valid && p2Valid) {
         gameStart = true;
-        view->displayBoard(*board.get());
+        view->displayBoard();
       } else {
         cout << "Not valid player" << endl;
       }
@@ -129,6 +129,7 @@ int main() {
           continue;
         }
         if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1], promoChar)){
+          view->update(pos);
           isWhiteTurn = !isWhiteTurn;
         } else {
           cout << "Invalid Move!" << endl;
@@ -137,13 +138,19 @@ int main() {
       } else {
         // when normal move
         if (board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
+          view->update(pos); 
           isWhiteTurn = !isWhiteTurn;
         } else {
           cout << "Invalid Move!" << endl;
           continue;
         }
       }
-      view->displayBoard(*board.get());
+      if(board->isCheckMate(board.get(), isWhiteTurn)){
+        isWhiteTurn ? ++blackPoints : ++whitePoints;
+        isWhiteTurn = true;
+        gameStart = false;
+        cout << (isWhiteTurn ? "Black wins." : "White wins.") << endl;
+      }
     } else if(command == "setup"){
       if (gameStart) {
         cout << "Cannot enter setup mode while game is played" << endl;
@@ -229,7 +236,7 @@ int main() {
           }
           if (up != nullptr) {
             board->place(move(up), pos[0], pos[1]);
-            view->displayBoard(*board.get());
+            view->update(pos);
           }
         } else if(command == "-"){
           cin >> arg;
@@ -239,7 +246,7 @@ int main() {
             continue;
           }
           board->remove(pos[0], pos[1]);
-          view->displayBoard(*board.get());
+          view->update(pos);
         } else if(command == "="){
           cin >> arg;
           arg == "white" ? isWhiteTurn = true : isWhiteTurn = false;

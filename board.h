@@ -51,6 +51,7 @@ class Board {
 		bool checkPromotion(int x, int y, int toX, int toY);
 
 		bool colorInCheck(bool isWhite, vector<int> kingPos);
+		bool isCheckMate(const Board &other, bool checkWhite);
 
 		bool validBoard();
 
