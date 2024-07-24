@@ -22,12 +22,27 @@ void King::setDidFirstMove() {
 
 // Check if the move is legal for the King
 // all current and to should be guaranteed to be in the board
-bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
+bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
+  if (x == toX && y == toY) return false;
+  // check if the move would put the king in check
+  if (!recursive) {
+    Board temp = board;
+    temp.movePieceWithoutValidation(x, y, toX, toY);
+    if (temp.colorInCheck(this->getIsWhite(), {toX, toY})) return false;
+  }
+  // check if the move is castling
   if (!didFirstMove && y == toY && abs(x - toX) == 2) {
+    if (board.colorInCheck(this->getIsWhite(), {x, y})) return false;
     if (toX > x) {
       for (int i = x + 1; i < boardWidth - 1; ++i) {
         if (board.pieceAt(i, y) != nullptr) {
           return false;
+        }
+        // check if the move would put the king in check
+        if (!recursive) {
+          Board temp = board;
+          temp.movePieceWithoutValidation(x, y, i, toY);
+          if (temp.colorInCheck(this->getIsWhite(), {i, toY})) return false;
         }
       }
       if (dynamic_cast<Rook*>(board.pieceAt(boardWidth - 1, y)) != nullptr && !(dynamic_cast<Rook*>(board.pieceAt(boardWidth - 1, y))->getDidFirstMove())){

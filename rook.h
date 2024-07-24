@@ -9,7 +9,7 @@ class Rook : public Piece {
   public:
     Rook(bool isWhite, bool didFirstMove = false);
     unique_ptr<Piece> clone() const override;
-    bool isMoveLegal(int x, int y, int toX, int toY, Board &board) override;
+    bool isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) override;
     vector<vector<int>> getLegalMoves(vector<int> current, Board &board) override;
     void setDidFirstMove();
     bool getDidFirstMove();

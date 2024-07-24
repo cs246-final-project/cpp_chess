@@ -21,9 +21,15 @@ void Pawn::setDidFirstMove() {
 
 // Check if the move is legal for the Pawn
 // all current and to should be guaranteed to be in the board
-bool Pawn::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
+bool Pawn::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
+  // check if the move would put the king in check
+  if (!recursive) {
+    Board temp = board;
+    temp.movePieceWithoutValidation(x, y, toX, toY);
+    if (temp.colorInCheck(this->getIsWhite())) return false;
+  }
   // check for en passant
   if (board.lastMove().size() > 0) {
     vector<vector<int>> history = board.lastMove();

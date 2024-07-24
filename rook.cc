@@ -21,7 +21,7 @@ void Rook::setDidFirstMove() {
 
 // Check if the move is legal for the Rook
 // all current and to should be guaranteed to be in the board
-bool Rook::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
+bool Rook::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
   // false if the destination is not in the same row or column
@@ -40,6 +40,12 @@ bool Rook::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
   }
   // false if the destination has a piece of the same color
   if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
+  // check if the move would put the king in check
+  if (!recursive) {
+    Board temp = board;
+    temp.movePieceWithoutValidation(x, y, toX, toY);
+    if (temp.colorInCheck(this->getIsWhite())) return false;
+  }
   return true;
 }
 
