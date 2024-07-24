@@ -136,9 +136,10 @@ bool Board::validBoard(){
   return true;
 }
 
-bool Board::movePiece (int x, int y, int toX, int toY){
-  if (pieceAt(x,y) == nullptr) return false;
-  if (x == toX && y == toY) return false;
+vector<vector<int>> Board::movePiece (int x, int y, int toX, int toY){
+  if (pieceAt(x,y) == nullptr) return {};
+  if (x == toX && y == toY) return {};
+  vector<vector<int>> changedPositions = {{x, y}, {toX, toY}};
   if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this, false)){
     if (pieceAt(toX, toY) != nullptr){
       remove(toX, toY);
@@ -158,17 +159,23 @@ bool Board::movePiece (int x, int y, int toX, int toY){
     if (dynamic_cast<King*>(pieceAt(toX, toY)) != nullptr && abs(x - toX) == 2){
       if (toX > x){
         board[toY][toX - 1] = move(board[toY][7]);
+        changedPositions.push_back({toX - 1, toY});
+        changedPositions.push_back({7, toY});
       } else {
         board[toY][toX + 1] = move(board[toY][0]);
+        changedPositions.push_back({toX + 1, toY});
+        changedPositions.push_back({0, toY});
       }
     }
-    return true;
+    return changedPositions;
   }
-  return false;
+  return {};
 }
 
-bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
-  if (pieceAt(x,y) == nullptr) return false;
+vector<vector<int>> Board::movePiece (int x, int y, int toX, int toY, char promotion){
+  if (pieceAt(x,y) == nullptr) return {};
+  if (x == toX && y == toY) return {};
+  vector<vector<int>> changedPositions = {{x, y}, {toX, toY}};
   if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this, false)){
     unique_ptr<Piece> p;
     switch (promotion){
@@ -190,9 +197,9 @@ bool Board::movePiece (int x, int y, int toX, int toY, char promotion){
     remove(x, y);
     place(move(p), toX, toY);
     history.addMove({x,y}, {toX, toY});
-    return true;
+    return changedPositions;
   }
-  return false;
+  return {};
 }
 
 void Board::movePieceWithoutValidation(int x, int y, int toX, int toY) {
