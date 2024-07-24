@@ -44,8 +44,8 @@ class Board {
 		vector<vector<int>> getAliveWhite();
 		vector<vector<int>> getAliveBlack();
 
-		bool movePiece(int x, int y, int toX, int toY);
-		bool movePiece(int x, int y, int toX, int toY, char promotion);
+		vector<vector<int>> movePiece(int x, int y, int toX, int toY);
+		vector<vector<int>> movePiece(int x, int y, int toX, int toY, char promotion);
 		void movePieceWithoutValidation(int x, int y, int toX, int toY);
 
 		// use when move is already validated
