@@ -11,9 +11,15 @@ unique_ptr<Piece> Queen::clone() const {
 
 // Check if the move is legal for the Queen
 // all current and to should be guaranteed to be in the board
-bool Queen::isMoveLegal(int x, int y, int toX, int toY, Board &board) {
+bool Queen::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
+  // check if the move would put the king in check
+  if (!recursive) {
+    Board temp = board;
+    temp.movePieceWithoutValidation(x, y, toX, toY);
+    if (temp.colorInCheck(this->getIsWhite())) return false;
+  }
   if (x == toX || y == toY) {
     // when moving like a rook
     // false if there is a piece in between
