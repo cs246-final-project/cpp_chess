@@ -87,12 +87,12 @@ bool Board::colorInCheck(bool isWhite){
   return colorInCheck(isWhite, kingPos);
 }
 
-bool Board::isCheckMate(bool isWhite){
+bool Board::canMove(bool isWhite){
   Board tempBoard = *this;
   vector<vector<int>> positions = (isWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
 
   for(auto pos : positions){
-    Piece* p = tempBoard.pieceAt(pos[0], pos[1]);
+    Piece* p = pieceAt(pos[0], pos[1]);
     vector<vector<int>> possibleMoves = p->getLegalMoves(pos, tempBoard);
     for(auto move : possibleMoves){
       tempBoard.movePiece(pos[0], pos[1], move[0], move[1]);
@@ -101,27 +101,6 @@ bool Board::isCheckMate(bool isWhite){
       }
       tempBoard = *this;
     }
-  }
-  return true;
-}
-
-bool Board::staleMate(bool isWhite){
-  Board tempBoard = *this;
-  vector<int> kingPos;
-  vector<vector<int>> positions = (isWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
-  for(auto pos : positions){
-    if(dynamic_cast<King*>(board[pos[1]][pos[0]].get()) != nullptr){
-      kingPos = pos;
-    }
-  }
-  Piece* p = pieceAt(kingPos[0], kingPos[1]);
-  vector<vector<int>> possibleMoves = p->getLegalMoves(kingPos, *this);
-  for(auto move : possibleMoves){
-    tempBoard.movePiece(kingPos[0], kingPos[1], move[0], move[1]);
-    if(!(tempBoard.colorInCheck(isWhite, vector<int>{move[0], move[1]}))){
-      return false;
-    }
-    tempBoard = *this;
   }
   return true;
 }
@@ -151,7 +130,7 @@ bool Board::validBoard(){
   if(numWKings != 1 || numBKings != 1){
     return false; // if either side does not have exactly one king
   }
-  if(colorInCheck(true, blackKingPos) || colorInCheck(false, whiteKingPos)){
+  if(colorInCheck(true, whiteKingPos) || colorInCheck(false, blackKingPos)){
     return false;
   }
   return true;
@@ -269,6 +248,7 @@ void Board::place(unique_ptr<Piece> p, int posX, int posY){
 }
 
 void Board::remove(int posX, int posY){
+  if(!board[posY][posX]) return;
   removePieceFromAlive(posX, posY);
   board[posY][posX].reset(nullptr);
 }

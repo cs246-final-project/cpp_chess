@@ -71,7 +71,7 @@ void View::colourWins(bool isWhite){
 void View::draw(){
   w->fillRectangle(50, 170, 380, 140, 3);
   w->fillRectangle(53, 173, 374, 134, 2);
-  w->drawString(2, 210, 240, "Draw.");
+  w->drawString(2, 210, 240, "Stalemate.");
 }
 
 char View::getPieceChar(Piece* p){

@@ -88,8 +88,8 @@ int main() {
           view = make_unique<View>(board.get());
         } else {
           isBoardCustom = false;
-          view->displayBoard();
         }
+        view->displayBoard();
         gameStart = true;
       } else {
         cout << "Not valid player" << endl;
@@ -99,8 +99,6 @@ int main() {
       unique_ptr<Board> temp = make_unique<Board>();
       swap(board, temp);
       cout << (isWhiteTurn ? "Black wins." : "White wins.") << endl;
-      cout << "White: " << whitePoints << endl;
-      cout << "Black: " << blackPoints << endl;
       view->colourWins(!isWhiteTurn);
       isWhiteTurn = true;
       gameStart = false;
@@ -162,27 +160,19 @@ int main() {
           continue;
         }
       }
-      if(board->colorInCheck(isWhiteTurn)){
-        if(board->isCheckMate(isWhiteTurn)){
+      if(board->canMove(isWhiteTurn)){
+        if(board->colorInCheck(isWhiteTurn)){
           isWhiteTurn ? ++blackPoints : ++whitePoints;
           view->colourWins(!isWhiteTurn);
-          cout << (isWhiteTurn ? "Black wins." : "White wins.") << endl;
-          cout << "White: " << whitePoints << endl;
-          cout << "Black: " << blackPoints << endl;
-          isWhiteTurn = true;
-          gameStart = false;
-        }
-      } else {
-        if(board->staleMate(isWhiteTurn)){
+          cout << (isWhiteTurn ? "Checkmate. Black wins." : "Checkmate. White wins.") << endl;
+        } else {
           blackPoints += 0.5;
           whitePoints += 0.5;
           view->draw();
-          cout << "Draw." << endl;
-          cout << "White: " << whitePoints << endl;
-          cout << "Black: " << blackPoints << endl;
-          isWhiteTurn = true;
-          gameStart = false;
+          cout << "Stalemate." << endl;
         }
+        isWhiteTurn = true;
+        gameStart = false;
       }
     } else if(command == "setup"){
       if (gameStart) {
@@ -295,6 +285,7 @@ int main() {
           }
         } else {
           cout << "Invalid Command!" << endl;
+
         }
       }
     } else if (command == "quit") {
@@ -303,5 +294,8 @@ int main() {
       cout << "Invalid Command!" << endl;
     }
   }
+  cout << "Final Score:" << endl;
+  cout << "White: " << whitePoints << endl;
+  cout << "Black: " << blackPoints << endl;
   return 0;
 }

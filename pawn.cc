@@ -94,7 +94,7 @@ vector<vector<int>> Pawn::getLegalMoves(vector<int> current, Board &board) {
     if (current[0] + 1 >= 0 && current[0] + 1 < 8 && board.pieceAt(current[0] + 1, current[1] + direction) != nullptr && board.pieceAt(current[0] + 1, current[1] + direction)->getIsWhite() != getIsWhite()) {
       legalMoves.push_back({current[0] + direction, current[1] + 1});
     }
-    if (current[1] - 1 >= 0 && current[1] - 1 < 8 && board.pieceAt(current[0] - 1, current[1] + direction) != nullptr && board.pieceAt(current[0] - 1, current[1] + direction)->getIsWhite() != getIsWhite()) {
+    if (current[0] - 1 >= 0 && current[0] - 1 < 8 && board.pieceAt(current[0] - 1, current[1] + direction) != nullptr && board.pieceAt(current[0] - 1, current[1] + direction)->getIsWhite() != getIsWhite()) {
       legalMoves.push_back({current[0] + direction, current[1] - 1});
     }
     // check for en passant
