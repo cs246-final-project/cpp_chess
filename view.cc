@@ -5,7 +5,6 @@ View::View(Board *board) : board{board}{
 }
 
 void View::displayBoard(){
-
   for(int i = 0; i < boardHeight; i++){
     for(int j = 0; j < boardWidth; j++){
       int posX = j*60;
@@ -48,7 +47,6 @@ void View::update(vector<vector<int>> coords){
     } else {
       w->drawTile(j, i, getPieceString(p), p->getIsWhite());
     }
-    cout << endl;
   }
   for(int i = 0; i < boardHeight; i++){
     for(int j = 0; j < boardWidth; j++){
@@ -62,6 +60,18 @@ void View::update(vector<vector<int>> coords){
     }
     cout << endl;
   }
+}
+
+void View::colourWins(bool isWhite){
+  w->fillRectangle(50, 170, 380, 140, 3);
+  w->fillRectangle(53, 173, 374, 134, 2);
+  w->drawString(2, 210, 240, (isWhite ? "White wins." : "Black wins."));
+}
+
+void View::draw(){
+  w->fillRectangle(50, 170, 380, 140, 3);
+  w->fillRectangle(53, 173, 374, 134, 2);
+  w->drawString(2, 210, 240, "Stalemate.");
 }
 
 char View::getPieceChar(Piece* p){
