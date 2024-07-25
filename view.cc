@@ -36,19 +36,16 @@ void View::update(vector<vector<int>> coords){
   for(auto pos : coords){
     int i = pos[1];
     int j = pos[0];
-    cout << j << " " << i << " ";
     int posX = j*60;
     int posY = i*60;
     Piece* p = board->pieceAt(j, i);
     if(p == nullptr){
-      cout << "empty ";
       if((i+j)%2 == 0){
         w->fillRectangle(posX, posY, 60, 60, 0);
       } else {
         w->fillRectangle(posX, posY, 60, 60, 1);
       }
     } else {
-      cout << "piece ";
       w->drawTile(j, i, getPieceString(p), p->getIsWhite());
     }
     cout << endl;
