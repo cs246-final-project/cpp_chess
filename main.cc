@@ -35,7 +35,7 @@ int main() {
   bool gameStart = false;
   bool setupMode = false;
   bool isWhiteTurn = true;
-  int whitePoints, blackPoints;
+  int whitePoints = 0, blackPoints = 0;
 
   unique_ptr<Board> board = make_unique<Board>();
   unique_ptr<View> view = make_unique<View>(board.get());
@@ -149,11 +149,15 @@ int main() {
           continue;
         }
       }
-      if(board->isCheckMate(isWhiteTurn)){
-        isWhiteTurn ? ++blackPoints : ++whitePoints;
-        isWhiteTurn = true;
-        gameStart = false;
-        cout << (isWhiteTurn ? "Black wins." : "White wins.") << endl;
+      if(board->colorInCheck(isWhiteTurn)){
+        if(board->isCheckMate(isWhiteTurn)){
+          isWhiteTurn ? ++blackPoints : ++whitePoints;
+          isWhiteTurn = true;
+          gameStart = false;
+          cout << (isWhiteTurn ? "Black wins." : "White wins.") << endl;
+          cout << "White: " << whitePoints << endl;
+          cout << "Black: " << blackPoints << endl;
+        }
       }
     } else if(command == "setup"){
       if (gameStart) {

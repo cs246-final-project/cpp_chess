@@ -9,6 +9,7 @@
 #include "queen.h"
 #include "king.h"
 #include <vector>
+#include <iostream>
 using namespace std;
 
 const int boardWidth = 8;

@@ -89,23 +89,26 @@ bool Board::colorInCheck(bool isWhite){
 
 bool Board::isCheckMate(bool checkWhite){
   Board tempBoard = *this;
-  vector<int> kingPos;
   vector<vector<int>> positions = (checkWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
+  int moveCount = 0;
 
-  for(auto pos : positions){
-    if(tempBoard.pieceAt(pos[0], pos[1])) kingPos = pos;
-  }
+  std::cout << positions.size() << " pieces" << endl;
+
   for(auto pos : positions){
     Piece* p = tempBoard.pieceAt(pos[0], pos[1]);
     vector<vector<int>> possibleMoves = p->getLegalMoves(pos, tempBoard);
+    std::cout << "piecePos: " << pos[0] << " " << pos[1] << endl;
     for(auto move : possibleMoves){
-      unique_ptr<Piece> taken = std::move(tempBoard.board[move[0]][move[1]]);
+      ++moveCount;
+      std::cout << "possible move: " << move[0] << " " << move[1] << endl;
       tempBoard.movePiece(pos[0], pos[1], move[0], move[1]);
-      if(!tempBoard.colorInCheck(checkWhite, kingPos)) return false;
-      tempBoard.movePiece(move[0], move[1], pos[0], pos[1]);
-      tempBoard.board[move[0]][move[1]] = std::move(taken);
+      if(!(tempBoard.colorInCheck(checkWhite))){
+        return false;
+      }
+      tempBoard = *this;
     }
   }
+  std::cout << moveCount << " moves" << endl;
   return true;
 }
 
