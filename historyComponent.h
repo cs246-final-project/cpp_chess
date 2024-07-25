@@ -10,8 +10,8 @@ class HistoryComponent {
   vector<int> to;
   public:
     HistoryComponent(vector<int> from, vector<int> to);
-    vector<int> getFrom();
-    vector<int> getTo();
+    vector<int> getFrom() const;
+    vector<int> getTo() const;
 };
 
 #endif

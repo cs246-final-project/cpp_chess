@@ -11,7 +11,7 @@ unique_ptr<Piece> Bishop::clone() const {
 
 // Check if the move is legal for the Bishop
 // all current and to should be guaranteed to be in the board
-bool Bishop::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
+bool Bishop::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool recursive) const {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
   // false if the destination is not in the same diagonal
@@ -35,7 +35,7 @@ bool Bishop::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recu
 
 // Get all the legal next moves for the Bishop
 // current should be guaranteed to be in the board
-vector<vector<int>> Bishop::getLegalMoves(vector<int> current, Board &board) {
+vector<vector<int>> Bishop::getLegalMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int xSign = -1; xSign <= 1; xSign += 2) {
     for (int ySign = -1; ySign <= 1; ySign += 2) {

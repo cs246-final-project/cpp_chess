@@ -65,18 +65,25 @@ Board& Board::operator=(const Board &other) {
   return *this;
 }
 
+vector<vector<int>> Board::getAliveWhite() const {
+  return aliveWhite;
+};
+vector<vector<int>> Board::getAliveBlack() const {
+  return aliveBlack;
+};
+
 Piece* Board::pieceAt(int x, int y) const {
   return board[y][x].get();
 }
 
-bool Board::colorInCheck(bool isWhite, vector<int> kingPos){
+bool Board::colorInCheck(bool isWhite, vector<int> kingPos) const {
   for(auto pos : (isWhite ? aliveBlack : aliveWhite)){
     if(pieceAt(pos[0], pos[1])->isMoveLegal(pos[0], pos[1], kingPos[0], kingPos[1], *this, true)) return true;
   }
   return false;
 }
 
-bool Board::colorInCheck(bool isWhite){
+bool Board::colorInCheck(bool isWhite) const {
   vector<int> kingPos;
   for(auto pos : (isWhite ? aliveWhite : aliveBlack)){
     if(dynamic_cast<King*>(pieceAt(pos[0], pos[1])) != nullptr){
@@ -87,7 +94,7 @@ bool Board::colorInCheck(bool isWhite){
   return colorInCheck(isWhite, kingPos);
 }
 
-bool Board::canMove(bool isWhite){
+bool Board::canMove(bool isWhite) const {
   Board tempBoard = *this;
   vector<vector<int>> positions = (isWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
 
@@ -105,7 +112,7 @@ bool Board::canMove(bool isWhite){
   return true;
 }
 
-bool Board::validBoard(){
+bool Board::validBoard() const {
   int numWKings = 0;
   int numBKings = 0;
   vector<int> whiteKingPos;
@@ -227,7 +234,7 @@ void Board::movePieceWithoutValidation(int x, int y, int toX, int toY) {
   }
 }
 
-bool Board::checkPromotion(int x, int y, int toX, int toY) {
+bool Board::checkPromotion(int x, int y, int toX, int toY) const {
   if (pieceAt(x, y) == nullptr) return false;
   if (dynamic_cast<Pawn*>(pieceAt(x, y)) == nullptr) return false;
   if (pieceAt(x, y)->getIsWhite() && toY == 0) {
@@ -253,11 +260,11 @@ void Board::remove(int posX, int posY){
   board[posY][posX].reset(nullptr);
 }
 
-vector<vector<int>> Board::lastMove(){
+vector<vector<int>> Board::lastMove() const {
   return history.getLast();
 }
 
-bool Board::willCheck(vector<int> from, vector<int> to){
+bool Board::willCheck(vector<int> from, vector<int> to) const {
   return true;
 }
 

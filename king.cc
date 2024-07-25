@@ -10,7 +10,7 @@ unique_ptr<Piece> King::clone() const {
 }
 
 // get if the King has moved. If true, the King cannot castle
-bool King::getDidFirstMove() {
+bool King::getDidFirstMove() const {
   return didFirstMove;
 }
 
@@ -22,7 +22,7 @@ void King::setDidFirstMove() {
 
 // Check if the move is legal for the King
 // all current and to should be guaranteed to be in the board
-bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
+bool King::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool recursive) const {
   if (x == toX && y == toY) return false;
   // check if the move would put the king in check
   if (!recursive) {
@@ -72,7 +72,7 @@ bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recurs
 
 // Get all the legal next moves for the King
 // current should be guaranteed to be in the board
-vector<vector<int>> King::getLegalMoves(vector<int> current, Board &board) {
+vector<vector<int>> King::getLegalMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int i = -1; i <= 1; ++i) {
     for (int j = -1; j <= 1; ++j) {
