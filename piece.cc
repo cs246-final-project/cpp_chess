@@ -3,10 +3,10 @@
 
 Piece::Piece(const bool isWhite, const int point): isWhite(isWhite), point(point) {};
 
-bool Piece::getIsWhite() {
+bool Piece::getIsWhite() const {
   return isWhite;
 }
 
-int Piece::getPoint() {
+int Piece::getPoint() const {
   return point;
 }

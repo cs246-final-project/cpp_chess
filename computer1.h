@@ -8,7 +8,7 @@ class Computer1 : public Computer {
   public:
     Computer1(const bool isWhite);
     ~Computer1() = default;
-    vector<vector<int>> getMove(Board &board) override;
+    vector<vector<int>> getMove(const Board &board) const override;
 };
 
 #endif

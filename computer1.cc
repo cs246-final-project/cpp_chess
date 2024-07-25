@@ -2,14 +2,10 @@
 
 Computer1::Computer1(const bool isWhite): Computer{isWhite, 1} {};
 
-vector<vector<int>> Computer1::getMove(Board &board) {
-  vector<vector<vector<int>>> possibleMoves;
-  for (auto ele : isWhite ? board.getAliveWhite() : board.getAliveBlack()) {
-    Piece *piece = board.pieceAt(ele[0], ele[1]);
-    vector<vector<int>> moves = piece->getLegalMoves({ele[0], ele[1]}, board);
-    for (auto move : moves) {
-      possibleMoves.push_back({ele, move});
-    }
+vector<vector<int>> Computer1::getMove(const Board &board) const {
+  vector<vector<vector<int>>> possibleMoves = board.getAllPossibleMoves(isWhite);
+  if (possibleMoves.size() == 0) {
+    return {};
   }
   int random = rand() % possibleMoves.size();
   vector<vector<int>> move = possibleMoves[random];

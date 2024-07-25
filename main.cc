@@ -1,6 +1,7 @@
 #include "piece.h"
 #include "board.h"
 #include "view.h"
+#include "computer1.h"
 
 #include <iostream>
 #include <memory>
@@ -39,8 +40,8 @@ int main() {
 
   unique_ptr<Board> board = make_unique<Board>();
   unique_ptr<View> view = make_unique<View>(board.get());
-  // unique_ptr<Player> white;
-  // unique_ptr<Player> black;
+  unique_ptr<Computer> white = nullptr;
+  unique_ptr<Computer> black = nullptr;
   
   string command;
   while(cin >> command){
@@ -53,7 +54,7 @@ int main() {
         // white = move(make_unique(human));
       } else if(p1 == "computer1") {
         p1Valid = true;
-        // white = move(make_unique(cpu1));
+        white = make_unique<Computer1>(true);
       } else if(p1 == "computer2") {
         p1Valid = true;
         // white = move(make_unique(cpu2));
@@ -69,7 +70,7 @@ int main() {
         // black = move(make_unique(human));
       } else if(p2 == "computer1") {
         p2Valid = true;
-        // black = move(make_unique(cpu1));
+        black = make_unique<Computer1>(false);
       } else if(p2 == "computer2") {
         p2Valid = true;
         // black = move(make_unique(cpu2));
@@ -92,6 +93,33 @@ int main() {
       swap(board, temp);
       gameStart = false;
     } else if(command == "move") {
+      if (isWhiteTurn ? white : black) {
+        vector<vector<int>> cpuMove;
+        Board boardCopy = board->clone();
+        if (isWhiteTurn) {
+          cpuMove = white->getMove(boardCopy);
+        } else {
+          cpuMove = black->getMove(boardCopy);
+        }
+        if (cpuMove.size() == 0) {
+          cout << "Error: Computer AI don't have a move!" << endl;
+          continue;
+        }
+        vector<vector<int>> cpuMoved;
+        if(board->checkPromotion(cpuMove[0][0], cpuMove[0][1], cpuMove[1][0], cpuMove[1][1])) {
+          vector<vector<int>> cpuMoved = board->movePiece(cpuMove[0][0], cpuMove[0][1], cpuMove[1][0], cpuMove[1][1], 'Q');
+        } else {
+          vector<vector<int>> cpuMoved = board->movePiece(cpuMove[0][0], cpuMove[0][1], cpuMove[1][0], cpuMove[1][1]);
+        }
+        if (cpuMoved.size() == 0) {
+          cout << "Error: Computer AI made a invalid move!" << endl;
+          continue;
+        } else {
+          view->update(cpuMoved);
+          isWhiteTurn = !isWhiteTurn;
+        }
+        continue;
+      }
       string from, to;
       cin >> from >> to;
       if (!gameStart) {

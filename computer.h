@@ -4,14 +4,14 @@
 #include "board.h"
 
 class Computer {
-  int level;
   bool isWhite;
+  int level;
   public:
     Computer(const bool isWhite, const int level);
     ~Computer() = default;
-    int getLevel();
-    bool getIsWhite();
-    virtual vector<vector<int>> getMove(Board &board) = 0;
+    int getLevel() const;
+    bool getIsWhite() const;
+    virtual vector<vector<int>> getMove(const Board &board) const = 0;
 };
 
 #endif

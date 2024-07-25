@@ -2,10 +2,10 @@
 
 Computer::Computer(const bool isWhite, const int level): isWhite{isWhite}, level{level} {};
 
-int Computer::getLevel() {
+int Computer::getLevel() const {
   return level;
 }
 
-bool Computer::getIsWhite() {
+bool Computer::getIsWhite() const {
   return isWhite;
 }

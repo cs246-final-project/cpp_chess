@@ -6,12 +6,12 @@ int bishopPoint = 30;
 Bishop::Bishop(const bool isWhite) : Piece(isWhite, bishopPoint) {};
 
 unique_ptr<Piece> Bishop::clone() const {
-  return make_unique<Bishop>(*this);
+  return make_unique<Bishop>(new Bishop{*this});
 }
 
 // Check if the move is legal for the Bishop
 // all current and to should be guaranteed to be in the board
-bool Bishop::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
+bool Bishop::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool recursive) const {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
   // false if the destination is not in the same diagonal
@@ -25,17 +25,15 @@ bool Bishop::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recu
   // false if the destination has a piece of the same color
   if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   // check if the move would put the king in check
-  if (!recursive) {
-    Board temp = board;
-    temp.movePieceWithoutValidation(x, y, toX, toY);
-    if (temp.colorInCheck(this->getIsWhite())) return false;
+  if (!recursive && board.willCheck(x, y, toX, toY)) {
+    return false;
   }
   return true;
 }
 
 // Get all the legal next moves for the Bishop
 // current should be guaranteed to be in the board
-vector<vector<int>> Bishop::getLegalMoves(vector<int> current, Board &board) {
+vector<vector<int>> Bishop::getLegalMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int xSign = -1; xSign <= 1; xSign += 2) {
     for (int ySign = -1; ySign <= 1; ySign += 2) {
@@ -56,5 +54,11 @@ vector<vector<int>> Bishop::getLegalMoves(vector<int> current, Board &board) {
       }
     }
   }
-  return legalMoves;
+  vector<vector<int>> legalMovesWithoutCheck;
+  for (auto move : legalMoves) {
+    if (!(board.willCheck(current, move))) {
+      legalMovesWithoutCheck.push_back(move);
+    }
+  }
+  return legalMovesWithoutCheck;
 }

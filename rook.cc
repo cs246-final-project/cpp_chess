@@ -6,11 +6,11 @@ int rookPoint = 50;
 Rook::Rook(const bool isWhite, bool didFirstMove) : Piece{isWhite, rookPoint}, didFirstMove{didFirstMove} {}
 
 unique_ptr<Piece> Rook::clone() const {
-  return make_unique<Rook>(*this);
+  return make_unique<Rook>(new Rook{*this});
 }
 
 // get if the Rook has moved. If true, the Rook cannot castle
-bool Rook::getDidFirstMove() {
+bool Rook::getDidFirstMove() const {
   return didFirstMove;
 }
 
@@ -21,7 +21,7 @@ void Rook::setDidFirstMove() {
 
 // Check if the move is legal for the Rook
 // all current and to should be guaranteed to be in the board
-bool Rook::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
+bool Rook::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool recursive) const {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
   // false if the destination is not in the same row or column
@@ -41,17 +41,15 @@ bool Rook::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recurs
   // false if the destination has a piece of the same color
   if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   // check if the move would put the king in check
-  if (!recursive) {
-    Board temp = board;
-    temp.movePieceWithoutValidation(x, y, toX, toY);
-    if (temp.colorInCheck(this->getIsWhite())) return false;
+  if (!recursive && board.willCheck(x, y, toX, toY)) {
+    return false;
   }
   return true;
 }
 
 // Get all the legal next moves for the Rook
 // current should be guaranteed to be in the board
-vector<vector<int>> Rook::getLegalMoves(vector<int> current, Board &board) {
+vector<vector<int>> Rook::getLegalMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int sign = -1; sign <= 1; sign += 2) {
     // Check in the direction in the same columns
@@ -85,5 +83,11 @@ vector<vector<int>> Rook::getLegalMoves(vector<int> current, Board &board) {
       }
     }
   }
-  return legalMoves;
+  vector<vector<int>> legalMovesWithoutCheck;
+  for (auto move : legalMoves) {
+    if (!(board.willCheck(current, move))) {
+      legalMovesWithoutCheck.push_back(move);
+    }
+  }
+  return legalMovesWithoutCheck;
 }

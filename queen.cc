@@ -6,19 +6,17 @@ int queenPoint = 90;
 Queen::Queen(const bool isWhite): Piece(isWhite, queenPoint) {}
 
 unique_ptr<Piece> Queen::clone() const {
-  return make_unique<Queen>(*this);
+  return make_unique<Queen>(new Queen{*this});
 }
 
 // Check if the move is legal for the Queen
 // all current and to should be guaranteed to be in the board
-bool Queen::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
+bool Queen::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool recursive) const {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
   // check if the move would put the king in check
-  if (!recursive) {
-    Board temp = board;
-    temp.movePieceWithoutValidation(x, y, toX, toY);
-    if (temp.colorInCheck(this->getIsWhite())) return false;
+  if (!recursive && board.willCheck(x, y, toX, toY)) {
+    return false;
   }
   if (x == toX || y == toY) {
     // when moving like a rook
@@ -52,7 +50,7 @@ bool Queen::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recur
 
 // Get all the legal next moves for the Queen
 // current should be guaranteed to be in the board
-vector<vector<int>> Queen::getLegalMoves(vector<int> current, Board &board) {
+vector<vector<int>> Queen::getLegalMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   // Check in the direction in the same columns and rows (like a rook)
     for (int sign = -1; sign <= 1; sign += 2) {
@@ -107,5 +105,11 @@ vector<vector<int>> Queen::getLegalMoves(vector<int> current, Board &board) {
       }
     }
   }
-  return legalMoves;
+  vector<vector<int>> legalMovesWithoutCheck;
+  for (auto move : legalMoves) {
+    if (!(board.willCheck(current, move))) {
+      legalMovesWithoutCheck.push_back(move);
+    }
+  }
+  return legalMovesWithoutCheck;
 }

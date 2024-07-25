@@ -38,34 +38,38 @@ class Board {
 
 		Board(const Board &other);
 		Board& operator=(const Board &other);
+		Board clone() const;
 
 
 		Piece* pieceAt(int x, int y) const;
 
-		vector<vector<int>> getAliveWhite();
-		vector<vector<int>> getAliveBlack();
+		vector<vector<int>> getAliveWhite() const;
+		vector<vector<int>> getAliveBlack() const;
 
 		vector<vector<int>> movePiece(int x, int y, int toX, int toY);
 		vector<vector<int>> movePiece(int x, int y, int toX, int toY, char promotion);
 		void movePieceWithoutValidation(int x, int y, int toX, int toY);
 
 		// use when move is already validated
-		bool checkPromotion(int x, int y, int toX, int toY);
+		bool checkPromotion(int x, int y, int toX, int toY) const;
 
-		bool colorInCheck(bool isWhite, vector<int> kingPos);
-    bool colorInCheck(bool isWhite);
-    bool isCheckMate(bool checkWhite);
+		bool colorInCheck(bool isWhite, vector<int> kingPos) const;
+    bool colorInCheck(bool isWhite) const;
+    bool isCheckMate(bool checkWhite) const;
 
-		bool validBoard();
+		bool validBoard() const;
 
 		void place(unique_ptr<Piece> p, int posx, int posy);
 		void remove(int posx, int posy);
 		void removePieceFromAlive(int x, int y);
 		void addPieceToAlive(int x, int y);
 
-		vector<vector<int>> lastMove();
+		vector<vector<int>> lastMove() const;
 
-		bool willCheck(vector<int> from, vector<int> to);
+		bool willCheck(vector<int> from, vector<int> to) const;
+		bool willCheck(int x, int y, int toX, int toY) const;
+
+		vector<vector<vector<int>>> getAllPossibleMoves(const bool isWhite) const;
 };
 
 #endif

@@ -14,7 +14,7 @@ public:
     History(const History& other);
     History& operator=(const History& other);
     void addMove(vector<int> from, vector<int> to);
-    vector<vector<int>> getLast();
+    vector<vector<int>> getLast() const;
 };
 
 #endif

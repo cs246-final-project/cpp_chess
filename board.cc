@@ -44,13 +44,18 @@ Board::Board(const Board &other)
   for (int i = 0; i < boardHeight; ++i) {
     vector<unique_ptr<Piece>> row(boardWidth);
     for (int j = 0; j < boardWidth; ++j) {
-      if (other.board[i][j]) {
-        row[j] = other.board[i][j]->clone();
+      if (other.board[j][i]) {
+        row[j] = other.board[j][i]->clone();
       }
     }
     board.push_back(move(row));
   }
   history = other.history;
+}
+
+Board Board::clone() const {
+  Board newBoard(*this);
+  return newBoard;
 }
 
 Board& Board::operator=(const Board &other) {
@@ -69,14 +74,14 @@ Piece* Board::pieceAt(int x, int y) const {
   return board[y][x].get();
 }
 
-bool Board::colorInCheck(bool isWhite, vector<int> kingPos){
+bool Board::colorInCheck(bool isWhite, vector<int> kingPos) const {
   for(auto pos : (isWhite ? aliveBlack : aliveWhite)){
     if(pieceAt(pos[0], pos[1])->isMoveLegal(pos[0], pos[1], kingPos[0], kingPos[1], *this, true)) return true;
   }
   return false;
 }
 
-bool Board::colorInCheck(bool isWhite){
+bool Board::colorInCheck(bool isWhite) const {
   vector<int> kingPos;
   for(auto pos : (isWhite ? aliveWhite : aliveBlack)){
     if(dynamic_cast<King*>(pieceAt(pos[0], pos[1])) != nullptr){
@@ -87,7 +92,7 @@ bool Board::colorInCheck(bool isWhite){
   return colorInCheck(isWhite, kingPos);
 }
 
-bool Board::isCheckMate(bool checkWhite){
+bool Board::isCheckMate(bool checkWhite) const {
   Board tempBoard = *this;
   vector<vector<int>> positions = (checkWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
   int moveCount = 0;
@@ -112,7 +117,7 @@ bool Board::isCheckMate(bool checkWhite){
   return true;
 }
 
-bool Board::validBoard(){
+bool Board::validBoard() const {
   int numWKings = 0;
   int numBKings = 0;
   vector<int> whiteKingPos;
@@ -230,7 +235,7 @@ void Board::movePieceWithoutValidation(int x, int y, int toX, int toY) {
   }
 }
 
-bool Board::checkPromotion(int x, int y, int toX, int toY) {
+bool Board::checkPromotion(int x, int y, int toX, int toY) const {
   if (pieceAt(x, y) == nullptr) return false;
   if (dynamic_cast<Pawn*>(pieceAt(x, y)) == nullptr) return false;
   if (pieceAt(x, y)->getIsWhite() && toY == 0) {
@@ -255,13 +260,27 @@ void Board::remove(int posX, int posY){
   board[posY][posX].reset(nullptr);
 }
 
-vector<vector<int>> Board::lastMove(){
+vector<vector<int>> Board::lastMove() const {
   return history.getLast();
 }
 
-bool Board::willCheck(vector<int> from, vector<int> to){
-  return true;
+bool Board::willCheck(int x, int y, int toX, int toY) const {
+  Board temp = *this;
+  temp.movePieceWithoutValidation(x, y, toX, toY);
+  if (temp.colorInCheck(pieceAt(x, y)->getIsWhite())) return true;
+  return false;
 }
+
+bool Board::willCheck(vector<int> from, vector<int> to) const {
+  return willCheck(from[0], from[1], to[0], to[1]);
+}
+
+vector<vector<int>> Board::getAliveWhite() const {
+  return aliveWhite;
+};
+vector<vector<int>> Board::getAliveBlack() const {
+  return aliveBlack;
+};
 
 void Board::removePieceFromAlive(int x, int y) {
   if (pieceAt(x, y)->getIsWhite()){
@@ -284,3 +303,19 @@ void Board::addPieceToAlive(int x, int y) {
     aliveBlack.emplace_back(vector<int>{x, y});
   }
 };
+
+vector<vector<vector<int>>> Board::getAllPossibleMoves(const bool isWhite) const {
+  vector<vector<vector<int>>> possibleMoves;
+  for (auto ele : (isWhite ? aliveWhite : aliveBlack)) {
+    cout << ele[0] << "," << ele[1] << endl;
+    if (pieceAt(ele[0], ele[1])) {
+      vector<vector<int>> moves = pieceAt(ele[0], ele[1])->getLegalMoves({ele[1], ele[0]}, &board);
+      for (auto move : moves) {
+        possibleMoves.push_back({ele, move});
+      }
+    } else {
+      cout << "no piece in the pointer" << endl;
+    }
+  }
+  return possibleMoves;
+}

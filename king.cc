@@ -6,11 +6,11 @@ int kingPoints = 900;
 King::King(const bool isWhite, bool didFirstMove): Piece(isWhite, kingPoints), didFirstMove{didFirstMove} {};
 
 unique_ptr<Piece> King::clone() const {
-  return make_unique<King>(*this);
+  return make_unique<King>(new King{*this});
 }
 
 // get if the King has moved. If true, the King cannot castle
-bool King::getDidFirstMove() {
+bool King::getDidFirstMove() const {
   return didFirstMove;
 }
 
@@ -22,13 +22,11 @@ void King::setDidFirstMove() {
 
 // Check if the move is legal for the King
 // all current and to should be guaranteed to be in the board
-bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
+bool King::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool recursive) const {
   if (x == toX && y == toY) return false;
   // check if the move would put the king in check
-  if (!recursive) {
-    Board temp = board;
-    temp.movePieceWithoutValidation(x, y, toX, toY);
-    if (temp.colorInCheck(this->getIsWhite(), {toX, toY})) return false;
+  if (!recursive && board.willCheck(x, y, toX, toY)) {
+    return false;
   }
   // check if the move is castling
   if (!didFirstMove && y == toY && abs(x - toX) == 2) {
@@ -43,6 +41,9 @@ bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recurs
           Board temp = board;
           temp.movePieceWithoutValidation(x, y, i, toY);
           if (temp.colorInCheck(this->getIsWhite(), {i, toY})) return false;
+        }
+        if (!recursive && board.willCheck(x, y, i, toY)) {
+          return false;
         }
       }
       if (dynamic_cast<Rook*>(board.pieceAt(boardWidth - 1, y)) != nullptr && !(dynamic_cast<Rook*>(board.pieceAt(boardWidth - 1, y))->getDidFirstMove())){
@@ -72,7 +73,7 @@ bool King::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recurs
 
 // Get all the legal next moves for the King
 // current should be guaranteed to be in the board
-vector<vector<int>> King::getLegalMoves(vector<int> current, Board &board) {
+vector<vector<int>> King::getLegalMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int i = -1; i <= 1; ++i) {
     for (int j = -1; j <= 1; ++j) {
@@ -112,6 +113,11 @@ vector<vector<int>> King::getLegalMoves(vector<int> current, Board &board) {
       }
     }
   }
-  // TODO: check if the King is in check after the move and filter it out
-  return legalMoves;
+  vector<vector<int>> legalMovesWithoutCheck;
+  for (auto move : legalMoves) {
+    if (!(board.willCheck(current, move))) {
+      legalMovesWithoutCheck.push_back(move);
+    }
+  }
+  return legalMovesWithoutCheck;
 }

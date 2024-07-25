@@ -6,12 +6,12 @@ int knightPoint = 30;
 Knight::Knight(const bool isWhite): Piece(isWhite, knightPoint) {}
 
 unique_ptr<Piece> Knight::clone() const {
-  return make_unique<Knight>(*this);
+  return make_unique<Knight>(new Knight{*this});
 }
 
 // Check if the move is legal for the Knight
 // all current and to should be guaranteed to be in the board
-bool Knight::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
+bool Knight::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool recursive) const {
   // false if the destination is same as current location or the destination is in the same row or column
   if (x == toX || y == toY) return false;
   // false if the destination is not in the L shape
@@ -19,17 +19,15 @@ bool Knight::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recu
   // false if the destination has a piece of the same color
   if (board.pieceAt(toX, toY) != nullptr && board.pieceAt(toX, toY)->getIsWhite() == this->getIsWhite()) return false;
   // check if the move would put the king in check
-  if (!recursive) {
-    Board temp = board;
-    temp.movePieceWithoutValidation(x, y, toX, toY);
-    if (temp.colorInCheck(this->getIsWhite())) return false;
+  if (!recursive && board.willCheck(x, y, toX, toY)) {
+    return false;
   }
   return true;
 }
 
 // Get all the legal next moves for the Knight
 // current should be guaranteed to be in the board
-vector<vector<int>> Knight::getLegalMoves(vector<int> current, Board &board) {
+vector<vector<int>> Knight::getLegalMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int i = -2; i <= 2; i += 4) {
     for (int j = -1; j <= 1; j += 2) {
@@ -45,5 +43,11 @@ vector<vector<int>> Knight::getLegalMoves(vector<int> current, Board &board) {
       }
     }
   }
-  return legalMoves;
+  vector<vector<int>> legalMovesWithoutCheck;
+  for (auto move : legalMoves) {
+    if (!(board.willCheck(current, move))) {
+      legalMovesWithoutCheck.push_back(move);
+    }
+  }
+  return legalMovesWithoutCheck;
 }
