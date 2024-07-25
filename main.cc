@@ -35,9 +35,10 @@ int main() {
   bool gameStart = false;
   bool setupMode = false;
   bool isWhiteTurn = true;
-  int whitePoints = 0, blackPoints = 0;
+  bool isBoardCustom = false;
+  float whitePoints = 0, blackPoints = 0;
 
-  unique_ptr<Board> board = make_unique<Board>();
+  unique_ptr<Board> board;
   unique_ptr<View> view = make_unique<View>(board.get());
   // unique_ptr<Player> white;
   // unique_ptr<Player> black;
@@ -81,8 +82,15 @@ int main() {
         // black = move(make_unique(cpu4));
       }
       if (p1Valid && p2Valid) {
+        if(!isBoardCustom){
+          unique_ptr<Board> temp = make_unique<Board>();
+          swap(board, temp);
+          view = make_unique<View>(board.get());
+        } else {
+          isBoardCustom = false;
+          view->displayBoard();
+        }
         gameStart = true;
-        view->displayBoard();
       } else {
         cout << "Not valid player" << endl;
       }
@@ -90,6 +98,11 @@ int main() {
       isWhiteTurn ? ++blackPoints : ++whitePoints;
       unique_ptr<Board> temp = make_unique<Board>();
       swap(board, temp);
+      cout << (isWhiteTurn ? "Black wins." : "White wins.") << endl;
+      cout << "White: " << whitePoints << endl;
+      cout << "Black: " << blackPoints << endl;
+      view->colourWins(!isWhiteTurn);
+      isWhiteTurn = true;
       gameStart = false;
     } else if(command == "move") {
       string from, to;
@@ -152,11 +165,23 @@ int main() {
       if(board->colorInCheck(isWhiteTurn)){
         if(board->isCheckMate(isWhiteTurn)){
           isWhiteTurn ? ++blackPoints : ++whitePoints;
-          isWhiteTurn = true;
-          gameStart = false;
+          view->colourWins(!isWhiteTurn);
           cout << (isWhiteTurn ? "Black wins." : "White wins.") << endl;
           cout << "White: " << whitePoints << endl;
           cout << "Black: " << blackPoints << endl;
+          isWhiteTurn = true;
+          gameStart = false;
+        }
+      } else {
+        if(board->staleMate(isWhiteTurn)){
+          blackPoints += 0.5;
+          whitePoints += 0.5;
+          view->draw();
+          cout << "Draw." << endl;
+          cout << "White: " << whitePoints << endl;
+          cout << "Black: " << blackPoints << endl;
+          isWhiteTurn = true;
+          gameStart = false;
         }
       }
     } else if(command == "setup"){
@@ -164,8 +189,12 @@ int main() {
         cout << "Cannot enter setup mode while game is played" << endl;
         continue;
       }
+      isBoardCustom = true;
       setupMode = true;
-      board = make_unique<Board>(true);
+      unique_ptr<Board> temp = make_unique<Board>(true);
+      swap(board, temp);
+      view = make_unique<View>(board.get());
+      view->displayBoard();
       string arg;
       while(setupMode && cin >> command){
         if(command == "+"){

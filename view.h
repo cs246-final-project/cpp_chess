@@ -17,6 +17,8 @@ class View {
     View(Board *board);
     void displayBoard();
     void update(vector<vector<int>> coords);
+    void colourWins(bool isWhite);
+    void draw();
 };
 
 #endif

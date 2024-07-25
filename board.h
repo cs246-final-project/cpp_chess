@@ -54,7 +54,8 @@ class Board {
 
 		bool colorInCheck(bool isWhite, vector<int> kingPos);
     bool colorInCheck(bool isWhite);
-    bool isCheckMate(bool checkWhite);
+    bool isCheckMate(bool isWhite);
+		bool staleMate(bool isWhite);
 
 		bool validBoard();
 

@@ -87,28 +87,42 @@ bool Board::colorInCheck(bool isWhite){
   return colorInCheck(isWhite, kingPos);
 }
 
-bool Board::isCheckMate(bool checkWhite){
+bool Board::isCheckMate(bool isWhite){
   Board tempBoard = *this;
-  vector<vector<int>> positions = (checkWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
-  int moveCount = 0;
-
-  std::cout << positions.size() << " pieces" << endl;
+  vector<vector<int>> positions = (isWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
 
   for(auto pos : positions){
     Piece* p = tempBoard.pieceAt(pos[0], pos[1]);
     vector<vector<int>> possibleMoves = p->getLegalMoves(pos, tempBoard);
-    std::cout << "piecePos: " << pos[0] << " " << pos[1] << endl;
     for(auto move : possibleMoves){
-      ++moveCount;
-      std::cout << "possible move: " << move[0] << " " << move[1] << endl;
       tempBoard.movePiece(pos[0], pos[1], move[0], move[1]);
-      if(!(tempBoard.colorInCheck(checkWhite))){
+      if(!(tempBoard.colorInCheck(isWhite))){
         return false;
       }
       tempBoard = *this;
     }
   }
-  std::cout << moveCount << " moves" << endl;
+  return true;
+}
+
+bool Board::staleMate(bool isWhite){
+  Board tempBoard = *this;
+  vector<int> kingPos;
+  vector<vector<int>> positions = (isWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
+  for(auto pos : positions){
+    if(dynamic_cast<King*>(board[pos[1]][pos[0]].get()) != nullptr){
+      kingPos = pos;
+    }
+  }
+  Piece* p = pieceAt(kingPos[0], kingPos[1]);
+  vector<vector<int>> possibleMoves = p->getLegalMoves(kingPos, *this);
+  for(auto move : possibleMoves){
+    tempBoard.movePiece(kingPos[0], kingPos[1], move[0], move[1]);
+    if(!(tempBoard.colorInCheck(isWhite, vector<int>{move[0], move[1]}))){
+      return false;
+    }
+    tempBoard = *this;
+  }
   return true;
 }
 
@@ -123,19 +137,23 @@ bool Board::validBoard(){
     }
   }
   for(auto pos : aliveWhite){ // number of white kings
-    if(dynamic_cast<King*>(board[pos[0]][pos[1]].get()) != nullptr){
+    if(dynamic_cast<King*>(board[pos[1]][pos[0]].get()) != nullptr){
       whiteKingPos = pos;
       ++numWKings;
     }
   }
   for(auto pos : aliveBlack){ // number of black kings
-    if(dynamic_cast<King*>(board[pos[0]][pos[1]].get()) != nullptr){
+    if(dynamic_cast<King*>(board[pos[1]][pos[0]].get()) != nullptr){
       blackKingPos = pos;
       ++numBKings;
     }
   }
-  if(numWKings != 1 || numBKings != 1) return false; // if either side does not have exactly one king
-  if(colorInCheck(true, blackKingPos) || colorInCheck(false, whiteKingPos)) return false;
+  if(numWKings != 1 || numBKings != 1){
+    return false; // if either side does not have exactly one king
+  }
+  if(colorInCheck(true, blackKingPos) || colorInCheck(false, whiteKingPos)){
+    return false;
+  }
   return true;
 }
 
