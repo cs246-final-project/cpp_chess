@@ -58,6 +58,9 @@ Game Commands:
       Use the = command followed by the color to set whose turn it is.
       ```= white```
 
+  Help
+    Use help command to get list of all possible commands.
+
 Example Usage:
   ```
   game human computer1
