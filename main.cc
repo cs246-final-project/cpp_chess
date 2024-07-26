@@ -193,9 +193,7 @@ int main() {
           }
         }
       }
-      cout << "1" << endl;
       if(board->cantMove(isWhiteTurn)){
-        cout << "2" << endl;
         if(board->colorInCheck(isWhiteTurn)){
           isWhiteTurn ? ++blackPoints : ++whitePoints;
           view->colourWins(!isWhiteTurn);

@@ -22,7 +22,7 @@ vector<vector<int>> Computer3::getMove(const Board &board) const {
         tempBoard.movePiece(pos[0], pos[1], move[0], move[1]);
       }
       if(!(tempBoard.colorInCheck(getIsWhite()))){
-        if(tempBoard.colorInCheck(getIsWhite())){
+        if(tempBoard.colorInCheck(!getIsWhite())){
           checkIndex.push_back(index);
         }
         moves.push_back({pos, move});

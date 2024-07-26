@@ -49,7 +49,7 @@ vector<vector<int>> Computer2::getMove(const Board &board) const {
     } else if (maxScore == point) {
       maxIndex.push_back(index);
     }
-    if (tempBoard.colorInCheck(getIsWhite())) {
+    if (tempBoard.colorInCheck(!getIsWhite())) {
       checkIndex.push_back(index);
     }
     ++index;
