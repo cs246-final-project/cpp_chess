@@ -330,6 +330,15 @@ int main() {
       }
     } else if (command == "quit") {
       break;
+    } else if(command == "help"){
+      cout << "game human computer2 - Arguments are human or computer[1-3]. Starts a game of chess." << endl;
+      cout << "resign - Forfeits the game." << endl;
+      cout << "move e1 e3 - Attempts to move the piece at the first argument to the position of the second argument." << endl;
+      cout << "setup - Enters setup mode." << endl;
+      cout << "+ Q a3 - Places the piece represented by the first argument at the position of the second argument." << endl;
+      cout << "- h8 - Removes the piece at the argument." << endl;
+      cout << "done - Checks for validity of the board. Exits setup mode if valid." << endl;
+      cout << "quit - Ends the program." << endl;
     } else {
       cout << "Invalid Command!" << endl;
     }
