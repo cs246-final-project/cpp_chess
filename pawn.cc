@@ -121,6 +121,7 @@ vector<vector<int>> Pawn::getLegalMoves(vector<int> current, const Board &board,
   return legalMovesWithoutCheck;
 }
 
+// Similar to getLegalMoves but only return the capture moves
 vector<vector<int>> Pawn::getCaptureMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   int direction = getIsWhite() ? -1 : 1;

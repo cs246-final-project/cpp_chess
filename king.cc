@@ -126,6 +126,7 @@ vector<vector<int>> King::getLegalMoves(vector<int> current, const Board &board,
   return legalMovesWithoutCheck;
 }
 
+// Similar to getLegalMoves but only return the capture moves
 vector<vector<int>> King::getCaptureMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int i = -1; i <= 1; ++i) {

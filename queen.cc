@@ -121,6 +121,7 @@ vector<vector<int>> Queen::getLegalMoves(vector<int> current, const Board &board
   return legalMovesWithoutCheck;
 }
 
+// Similar to getLegalMoves but only return the capture moves
 vector<vector<int>> Queen::getCaptureMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   // Check in the direction in the same columns and rows (like a rook)

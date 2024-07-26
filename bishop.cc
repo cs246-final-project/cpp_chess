@@ -70,6 +70,7 @@ vector<vector<int>> Bishop::getLegalMoves(vector<int> current, const Board &boar
   return legalMovesWithoutCheck;
 }
 
+// Similar to getLegalMoves but only return the capture moves
 vector<vector<int>> Bishop::getCaptureMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int xSign = -1; xSign <= 1; xSign += 2) {

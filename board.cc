@@ -53,6 +53,7 @@ Board::Board(const Board &other)
   history = other.history;
 }
 
+// clone the board
 Board Board::clone() const {
   Board newBoard(*this);
   return newBoard;
@@ -77,10 +78,12 @@ vector<vector<int>> Board::getAliveBlack() const {
   return aliveBlack;
 };
 
+// get the piece at the given position
 Piece* Board::pieceAt(int x, int y) const {
   return board[y][x].get();
 }
 
+// check if the color is in check
 bool Board::colorInCheck(bool isWhite, vector<int> kingPos) const {
   for(auto pos : (isWhite ? aliveBlack : aliveWhite)){
     if(pieceAt(pos[0], pos[1])->isMoveLegal(pos[0], pos[1], kingPos[0], kingPos[1], *this, true)) return true;
@@ -88,6 +91,7 @@ bool Board::colorInCheck(bool isWhite, vector<int> kingPos) const {
   return false;
 }
 
+// check if the color is in check
 bool Board::colorInCheck(bool isWhite) const {
   vector<int> kingPos;
   for(auto pos : (isWhite ? aliveWhite : aliveBlack)){
@@ -99,6 +103,7 @@ bool Board::colorInCheck(bool isWhite) const {
   return colorInCheck(isWhite, kingPos);
 }
 
+// check if the color is in checkmate or stalemate
 bool Board::cantMove(bool isWhite) const {
   Board tempBoard = *this;
   vector<vector<int>> positions = (isWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
@@ -117,6 +122,7 @@ bool Board::cantMove(bool isWhite) const {
   return true;
 }
 
+// check if it is a valid board
 bool Board::validBoard() const {
   int numWKings = 0;
   int numBKings = 0;
@@ -148,6 +154,7 @@ bool Board::validBoard() const {
   return true;
 }
 
+// move the piece from (x, y) to (toX, toY)
 vector<vector<int>> Board::movePiece (int x, int y, int toX, int toY){
   if (pieceAt(x,y) == nullptr) return {};
   if (x == toX && y == toY) return {};
@@ -191,6 +198,7 @@ vector<vector<int>> Board::movePiece (int x, int y, int toX, int toY){
   return {};
 }
 
+// move the piece from (x, y) to (toX, toY) with promotion
 vector<vector<int>> Board::movePiece (int x, int y, int toX, int toY, char promotion){
   if (pieceAt(x,y) == nullptr) return {};
   if (x == toX && y == toY) return {};
@@ -221,6 +229,8 @@ vector<vector<int>> Board::movePiece (int x, int y, int toX, int toY, char promo
   return {};
 }
 
+// move the piece from (x, y) to (toX, toY) without validation. For computer or checking for checkmate usage only.
+// risky to use this function as it does not check if the move is legal
 void Board::movePieceWithoutValidation(int x, int y, int toX, int toY) {
   if (pieceAt(toX, toY) != nullptr){
     remove(toX, toY);
@@ -248,6 +258,7 @@ void Board::movePieceWithoutValidation(int x, int y, int toX, int toY) {
   }
 }
 
+// check if the move is a promotion move
 bool Board::checkPromotion(int x, int y, int toX, int toY) const {
   if (pieceAt(x, y) == nullptr) return false;
   if (dynamic_cast<Pawn*>(pieceAt(x, y)) == nullptr) return false;
@@ -260,6 +271,7 @@ bool Board::checkPromotion(int x, int y, int toX, int toY) const {
   return false;
 }
 
+// place the piece at the given position
 void Board::place(unique_ptr<Piece> p, int posX, int posY){
   if (pieceAt(posX, posY)) {
     remove(posX, posY);
@@ -268,20 +280,24 @@ void Board::place(unique_ptr<Piece> p, int posX, int posY){
   addPieceToAlive(posX, posY);
 }
 
+// remove the piece at the given position
 void Board::remove(int posX, int posY){
   if(!board[posY][posX]) return;
   removePieceFromAlive(posX, posY);
   board[posY][posX].reset(nullptr);
 }
 
+// get the last move from history
 vector<vector<int>> Board::lastMove() const {
   return history.getLast();
 }
 
+// check if the move will put the king in check
 bool Board::willCheck(vector<int> from, vector<int> to) const {
   return true;
 }
 
+// remove the piece from alive vector
 void Board::removePieceFromAlive(int x, int y) {
   if (pieceAt(x, y)->getIsWhite()){
     // remove vector{toX, toY} from aliveWhite
@@ -296,6 +312,7 @@ void Board::removePieceFromAlive(int x, int y) {
   }
 }
 
+// add the piece to alive vector
 void Board::addPieceToAlive(int x, int y) {
   if (pieceAt(x, y)->getIsWhite()){
     aliveWhite.emplace_back(vector<int>{x, y});
@@ -304,6 +321,7 @@ void Board::addPieceToAlive(int x, int y) {
   }
 };
 
+// get the point of the board
 int Board::getPoint(bool isWhite) const {
   int point = 0;
   for(auto pos : (isWhite ? aliveWhite : aliveBlack)){

@@ -64,17 +64,20 @@ Xwindow::~Xwindow() {
 int Xwindow::getWidth() const { return width; }
 int Xwindow::getHeight() const { return height; }
 
+// Call this function to draw a single rectangle
 void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
   XSetForeground(d, gc, colours[colour]);
   XFillRectangle(d, w, gc, x, y, width, height);
   XSetForeground(d, gc, colours[Black]);
 }
 
+// Call this function to draw a message
 void Xwindow::drawString(int colour, int x, int y, string msg) {
   XSetForeground(d, gc, colours[colour]);
   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 }
 
+// Call this function to draw a single tile
 void Xwindow::drawTile(int r, int c, string piece, bool isWhite){
   string fileName = piece + ".png";
   unique_ptr<FILE, decltype(&fclose)> fp(fopen(fileName.c_str(), "rb"), &fclose);

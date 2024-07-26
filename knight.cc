@@ -59,6 +59,7 @@ vector<vector<int>> Knight::getLegalMoves(vector<int> current, const Board &boar
   return legalMovesWithoutCheck;
 }
 
+// Similar to getLegalMoves but only return the capture moves
 vector<vector<int>> Knight::getCaptureMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int i = -2; i <= 2; i += 4) {

@@ -4,6 +4,7 @@ View::View(Board *board) : board{board}{
   w = make_unique<Xwindow>(boardWidth*60, boardHeight*60);
 }
 
+// display the entire board
 void View::displayBoard(){
   for(int i = 0; i < boardHeight; i++){
     for(int j = 0; j < boardWidth; j++){
@@ -31,6 +32,8 @@ void View::displayBoard(){
     cout << endl;
   }
 }
+
+// update the board only for the given coordinates
 void View::update(vector<vector<int>> coords){
   for(auto pos : coords){
     int i = pos[1];
@@ -62,18 +65,21 @@ void View::update(vector<vector<int>> coords){
   }
 }
 
+// display the winning message
 void View::colourWins(bool isWhite){
   w->fillRectangle(50, 170, 380, 140, 3);
   w->fillRectangle(53, 173, 374, 134, 2);
   w->drawString(2, 210, 240, (isWhite ? "White wins." : "Black wins."));
 }
 
+// display the stalemate message
 void View::draw(){
   w->fillRectangle(50, 170, 380, 140, 3);
   w->fillRectangle(53, 173, 374, 134, 2);
   w->drawString(2, 210, 240, "Stalemate.");
 }
 
+// get the character representation of the piece
 char View::getPieceChar(Piece* p){
   char c;
   if(dynamic_cast<Pawn*>(p) != nullptr) c = 'p';
@@ -86,6 +92,7 @@ char View::getPieceChar(Piece* p){
   return c;
 }
 
+// get the string representation of the piece
 string View::getPieceString(Piece* p){
   if(dynamic_cast<Pawn*>(p) != nullptr) return "pawn";
   if(dynamic_cast<Rook*>(p) != nullptr) return "rook";

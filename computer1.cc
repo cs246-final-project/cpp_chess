@@ -2,6 +2,7 @@
 
 Computer1::Computer1(bool isWhite): Computer{isWhite} {};
 
+// get the move of the computer level 1
 vector<vector<int>> Computer1::getMove(const Board &board) const {
   Board tempBoard = board;
   vector<vector<int>> positions = (getIsWhite() ? tempBoard.getAliveWhite() : tempBoard.getAliveBlack());

@@ -2,6 +2,7 @@
 
 Computer3::Computer3(bool isWhite): Computer{isWhite} {};
 
+// get the move of the computer level 3
 vector<vector<int>> Computer3::getMove(const Board &board) const {
   Board tempBoard = board;
   int maxScore = -1000000;

@@ -99,6 +99,7 @@ vector<vector<int>> Rook::getLegalMoves(vector<int> current, const Board &board,
   return legalMovesWithoutCheck;
 }
 
+// Similar to getLegalMoves but only return the capture moves
 vector<vector<int>> Rook::getCaptureMoves(vector<int> current, const Board &board) const {
   vector<vector<int>> legalMoves;
   for (int sign = -1; sign <= 1; sign += 2) {
