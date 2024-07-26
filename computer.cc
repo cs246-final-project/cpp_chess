@@ -1,10 +1,6 @@
 #include "computer.h"
 
-Computer::Computer(const bool isWhite, const int level): isWhite{isWhite}, level{level} {};
-
-int Computer::getLevel() const {
-  return level;
-}
+Computer::Computer(bool isWhite): isWhite{isWhite} {};
 
 bool Computer::getIsWhite() const {
   return isWhite;

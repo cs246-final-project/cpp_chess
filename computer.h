@@ -5,11 +5,9 @@
 
 class Computer {
   bool isWhite;
-  int level;
   public:
-    Computer(const bool isWhite, const int level);
+    Computer(bool isWhite);
     ~Computer() = default;
-    int getLevel() const;
     bool getIsWhite() const;
     virtual vector<vector<int>> getMove(const Board &board) const = 0;
 };

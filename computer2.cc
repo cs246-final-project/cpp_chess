@@ -1,10 +1,10 @@
 #include "computer2.h"
 
-Computer2::Computer2(const bool isWhite): Computer{isWhite, 2} {}
+Computer2::Computer2(bool isWhite): Computer{isWhite} {};
 
 vector<vector<int>> Computer2::getMove(const Board &board) const {
   Board tempBoard = board;
-  vector<vector<int>> positions = (isWhite ? tempBoard.getAliveWhite() : tempBoard.getAliveBlack());
+  vector<vector<int>> positions = (getIsWhite() ? tempBoard.getAliveWhite() : tempBoard.getAliveBlack());
   vector<vector<vector<int>>> moves;
 
   for(auto pos : positions){
@@ -16,7 +16,7 @@ vector<vector<int>> Computer2::getMove(const Board &board) const {
       } else {
         tempBoard.movePiece(pos[0], pos[1], move[0], move[1]);
       }
-      if(!(tempBoard.colorInCheck(isWhite))){
+      if(!(tempBoard.colorInCheck(getIsWhite()))){
         moves.push_back({pos, move});
       }
       tempBoard = board;
@@ -35,7 +35,7 @@ vector<vector<int>> Computer2::getMove(const Board &board) const {
     } else {
       tempBoard.movePiece(move[0][0], move[0][1], move[1][0], move[1][1]);
     }
-    int point = tempBoard.getPoint(isWhite);
+    int point = tempBoard.getPoint(getIsWhite());
     if (index == 0) {
       maxScore = point;
       maxIndex.push_back(index);

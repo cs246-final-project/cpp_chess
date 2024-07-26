@@ -44,8 +44,8 @@ int main() {
 
   unique_ptr<Board> board;
   unique_ptr<View> view = make_unique<View>(board.get());
-  unique_ptr<Computer> whiteCpu;
-  unique_ptr<Computer> blackCpu;
+  unique_ptr<Computer> whiteCpu = nullptr;
+  unique_ptr<Computer> blackCpu = nullptr;
   
   string command;
   while(cin >> command){

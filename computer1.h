@@ -3,8 +3,6 @@
 #include "computer.h"
 
 class Computer1 : public Computer {
-  int level;
-  bool isWhite;
   public:
     Computer1(const bool isWhite);
     ~Computer1() = default;

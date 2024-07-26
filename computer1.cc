@@ -1,10 +1,10 @@
 #include "computer1.h"
 
-Computer1::Computer1(const bool isWhite): Computer{isWhite, 1} {}
+Computer1::Computer1(bool isWhite): Computer{isWhite} {};
 
 vector<vector<int>> Computer1::getMove(const Board &board) const {
   Board tempBoard = board;
-  vector<vector<int>> positions = (isWhite ? tempBoard.getAliveWhite() : tempBoard.getAliveBlack());
+  vector<vector<int>> positions = (getIsWhite() ? tempBoard.getAliveWhite() : tempBoard.getAliveBlack());
   vector<vector<vector<int>>> moves;
 
   for(auto pos : positions){
@@ -12,7 +12,7 @@ vector<vector<int>> Computer1::getMove(const Board &board) const {
     vector<vector<int>> possibleMoves = p->getLegalMoves(pos, tempBoard, false);
     for(auto move : possibleMoves){
       tempBoard.movePiece(pos[0], pos[1], move[0], move[1]);
-      if(!(tempBoard.colorInCheck(isWhite))){
+      if(!(tempBoard.colorInCheck(getIsWhite()))){
         moves.push_back({pos, move});
       }
       tempBoard = board;
