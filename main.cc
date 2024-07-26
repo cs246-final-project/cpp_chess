@@ -99,6 +99,11 @@ int main() {
         cout << "Not valid player" << endl;
       }
     } else if(command == "resign") {
+      if (!gameStart) {
+        cout << "Game not started!" << endl;
+        cin.ignore(1000, '\n');
+        continue;
+      }
       isWhiteTurn ? ++blackPoints : ++whitePoints;
       unique_ptr<Board> temp = make_unique<Board>();
       swap(board, temp);
