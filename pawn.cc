@@ -33,7 +33,8 @@ bool Pawn::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool 
   // check for en passant
   if (board.lastMove().size() > 0) {
     vector<vector<int>> history = board.lastMove();
-    if (dynamic_cast<Pawn*>(board.pieceAt(history[1][0], history[1][1])) != nullptr && board.pieceAt(history[1][0], history[1][1])->getIsWhite() != this->getIsWhite() && abs(history[1][1] - history[0][1]) == 2 && history[1][0] == toX && history[1][1] == toY && (history[1][0] == x + 1 || history[1][0] == x - 1) && history[1][1] == y) {
+    int direction = getIsWhite() ? -1 : 1;
+    if (dynamic_cast<Pawn*>(board.pieceAt(history[1][0], history[1][1])) != nullptr && board.pieceAt(history[1][0], history[1][1])->getIsWhite() != this->getIsWhite() && abs(history[1][1] - history[0][1]) == 2 && history[1][0] == toX && history[1][1] + direction == toY && (history[1][0] == x + 1 || history[1][0] == x - 1) && history[1][1] == y) {
       return true;
     };
   }
@@ -100,8 +101,9 @@ vector<vector<int>> Pawn::getLegalMoves(vector<int> current, const Board &board,
     // check for en passant
     if (board.lastMove().size() > 0) {
       vector<vector<int>> history = board.lastMove();
+      int direction = getIsWhite() ? -1 : 1;
       if (dynamic_cast<Pawn*>(board.pieceAt(history[1][0], history[1][1])) != nullptr && board.pieceAt(history[1][0], history[1][1])->getIsWhite() != this->getIsWhite() && abs(history[1][1] - history[0][1]) == 2 && history[1][0] == current[0] && history[1][1] == current[1] && (history[1][0] == current[0] + 1 || history[1][0] == current[0] - 1)) {
-        legalMoves.push_back({history[1][0], history[1][1]});
+        legalMoves.push_back({history[1][0], history[1][1] + direction});
       }
     }
   } 
