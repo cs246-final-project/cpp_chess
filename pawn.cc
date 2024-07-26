@@ -78,7 +78,7 @@ bool Pawn::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool 
 
 // Get all the legal next moves for the Pawn
 // current should be guaranteed to be in the board
-vector<vector<int>> Pawn::getLegalMoves(vector<int> current, const Board &board) const {
+vector<vector<int>> Pawn::getLegalMoves(vector<int> current, const Board &board, bool checkForCheckmate) const {
   vector<vector<int>> legalMoves;
   int direction = getIsWhite() ? -1 : 1;
   if (current[1] + direction >= 0 && current[1] + direction < 8) {
@@ -92,10 +92,10 @@ vector<vector<int>> Pawn::getLegalMoves(vector<int> current, const Board &board)
     }
     // capturing logic
     if (current[0] + 1 >= 0 && current[0] + 1 < 8 && board.pieceAt(current[0] + 1, current[1] + direction) != nullptr && board.pieceAt(current[0] + 1, current[1] + direction)->getIsWhite() != getIsWhite()) {
-      legalMoves.push_back({current[0] + direction, current[1] + 1});
+      legalMoves.push_back({current[0] + 1, current[1] + direction});
     }
     if (current[0] - 1 >= 0 && current[0] - 1 < 8 && board.pieceAt(current[0] - 1, current[1] + direction) != nullptr && board.pieceAt(current[0] - 1, current[1] + direction)->getIsWhite() != getIsWhite()) {
-      legalMoves.push_back({current[0] + direction, current[1] - 1});
+      legalMoves.push_back({current[0] - 1, current[1] + direction});
     }
     // check for en passant
     if (board.lastMove().size() > 0) {
@@ -105,5 +105,16 @@ vector<vector<int>> Pawn::getLegalMoves(vector<int> current, const Board &board)
       }
     }
   } 
-  return legalMoves;
+  if (checkForCheckmate) {
+    return legalMoves;
+  }
+  vector<vector<int>> legalMovesWithoutCheck;
+  for (auto ele: legalMoves) {
+    Board temp = board;
+    temp.movePieceWithoutValidation(current[0], current[1], ele[0], ele[1]);
+    if (!temp.colorInCheck(this->getIsWhite())) {
+      legalMovesWithoutCheck.push_back(ele);
+    }
+  }
+  return legalMovesWithoutCheck;
 }

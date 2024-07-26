@@ -72,7 +72,7 @@ bool King::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool 
 
 // Get all the legal next moves for the King
 // current should be guaranteed to be in the board
-vector<vector<int>> King::getLegalMoves(vector<int> current, const Board &board) const {
+vector<vector<int>> King::getLegalMoves(vector<int> current, const Board &board, bool checkForCheckmate) const {
   vector<vector<int>> legalMoves;
   for (int i = -1; i <= 1; ++i) {
     for (int j = -1; j <= 1; ++j) {
@@ -112,6 +112,16 @@ vector<vector<int>> King::getLegalMoves(vector<int> current, const Board &board)
       }
     }
   }
-  // TODO: check if the King is in check after the move and filter it out
-  return legalMoves;
+  if (checkForCheckmate) {
+    return legalMoves;
+  }
+  vector<vector<int>> legalMovesWithoutCheck;
+  for (auto ele: legalMoves) {
+    Board temp = board;
+    temp.movePieceWithoutValidation(current[0], current[1], ele[0], ele[1]);
+    if (!temp.colorInCheck(this->getIsWhite())) {
+      legalMovesWithoutCheck.push_back(ele);
+    }
+  }
+  return legalMovesWithoutCheck;
 }

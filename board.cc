@@ -53,6 +53,11 @@ Board::Board(const Board &other)
   history = other.history;
 }
 
+Board Board::clone() const {
+  Board newBoard(*this);
+  return newBoard;
+}
+
 Board& Board::operator=(const Board &other) {
   if (this == &other) {
     return *this;
@@ -94,13 +99,13 @@ bool Board::colorInCheck(bool isWhite) const {
   return colorInCheck(isWhite, kingPos);
 }
 
-bool Board::canMove(bool isWhite) const {
+bool Board::cantMove(bool isWhite) const {
   Board tempBoard = *this;
   vector<vector<int>> positions = (isWhite ? tempBoard.aliveWhite : tempBoard.aliveBlack);
 
   for(auto pos : positions){
     Piece* p = pieceAt(pos[0], pos[1]);
-    vector<vector<int>> possibleMoves = p->getLegalMoves(pos, tempBoard);
+    vector<vector<int>> possibleMoves = p->getLegalMoves(pos, tempBoard, true);
     for(auto move : possibleMoves){
       tempBoard.movePiece(pos[0], pos[1], move[0], move[1]);
       if(!(tempBoard.colorInCheck(isWhite))){

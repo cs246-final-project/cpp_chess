@@ -35,7 +35,7 @@ bool Bishop::isMoveLegal(int x, int y, int toX, int toY, const Board &board, boo
 
 // Get all the legal next moves for the Bishop
 // current should be guaranteed to be in the board
-vector<vector<int>> Bishop::getLegalMoves(vector<int> current, const Board &board) const {
+vector<vector<int>> Bishop::getLegalMoves(vector<int> current, const Board &board, bool checkForCheckmate) const {
   vector<vector<int>> legalMoves;
   for (int xSign = -1; xSign <= 1; xSign += 2) {
     for (int ySign = -1; ySign <= 1; ySign += 2) {
@@ -56,5 +56,16 @@ vector<vector<int>> Bishop::getLegalMoves(vector<int> current, const Board &boar
       }
     }
   }
-  return legalMoves;
+  if (checkForCheckmate) {
+    return legalMoves;
+  }
+  vector<vector<int>> legalMovesWithoutCheck;
+  for (auto ele: legalMoves) {
+    Board temp = board;
+    temp.movePieceWithoutValidation(current[0], current[1], ele[0], ele[1]);
+    if (!temp.colorInCheck(this->getIsWhite())) {
+      legalMovesWithoutCheck.push_back(ele);
+    }
+  }
+  return legalMovesWithoutCheck;
 }

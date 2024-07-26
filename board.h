@@ -38,7 +38,7 @@ class Board {
 
 		Board(const Board &other);
 		Board& operator=(const Board &other);
-
+		Board clone() const;
 
 		Piece* pieceAt(int x, int y) const;
 
@@ -54,7 +54,7 @@ class Board {
 
 		bool colorInCheck(bool isWhite, vector<int> kingPos) const;
     bool colorInCheck(bool isWhite) const;
-    bool canMove(bool isWhite) const;
+    bool cantMove(bool isWhite) const;
 
 		bool validBoard() const;
 

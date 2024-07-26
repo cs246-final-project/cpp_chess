@@ -9,7 +9,7 @@ vector<vector<int>> Computer1::getMove(const Board &board) const {
 
   for(auto pos : positions){
     Piece* p = tempBoard.pieceAt(pos[0], pos[1]);
-    vector<vector<int>> possibleMoves = p->getLegalMoves(pos, tempBoard);
+    vector<vector<int>> possibleMoves = p->getLegalMoves(pos, tempBoard, false);
     for(auto move : possibleMoves){
       tempBoard.movePiece(pos[0], pos[1], move[0], move[1]);
       if(!(tempBoard.colorInCheck(isWhite))){
