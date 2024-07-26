@@ -170,11 +170,15 @@ vector<vector<int>> Board::movePiece (int x, int y, int toX, int toY){
     // if the move is castling, move the rook
     if (dynamic_cast<King*>(pieceAt(toX, toY)) != nullptr && abs(x - toX) == 2){
       if (toX > x){
+        removePieceFromAlive(7, toY);
         board[toY][toX - 1] = move(board[toY][7]);
+        addPieceToAlive(toX - 1, toY);
         changedPositions.push_back({toX - 1, toY});
         changedPositions.push_back({7, toY});
       } else {
+        removePieceFromAlive(0, toY);
         board[toY][toX + 1] = move(board[toY][0]);
+        addPieceToAlive(toX + 1, toY);
         changedPositions.push_back({toX + 1, toY});
         changedPositions.push_back({0, toY});
       }
@@ -293,4 +297,15 @@ void Board::addPieceToAlive(int x, int y) {
   } else {
     aliveBlack.emplace_back(vector<int>{x, y});
   }
+};
+
+int Board::getPoint(bool isWhite) const {
+  int point = 0;
+  for(auto pos : (isWhite ? aliveWhite : aliveBlack)){
+    point += pieceAt(pos[0], pos[1])->getPoint();
+  }
+  for(auto pos : (isWhite ? aliveBlack : aliveWhite)){
+    point -= pieceAt(pos[0], pos[1])->getPoint();
+  }
+  return point;
 };

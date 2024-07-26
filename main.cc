@@ -2,6 +2,7 @@
 #include "board.h"
 #include "view.h"
 #include "computer1.h"
+#include "computer2.h"
 
 #include <iostream>
 #include <memory>
@@ -60,7 +61,7 @@ int main() {
         whiteCpu = move(make_unique<Computer1>(true));
       } else if(p1 == "computer2") {
         p1Valid = true;
-        // white = move(make_unique(cpu2));
+        whiteCpu = move(make_unique<Computer2>(true));
       } else if(p1 == "computer3") {
         p1Valid = true;
         // white = move(make_unique(cpu3));
@@ -76,7 +77,7 @@ int main() {
         blackCpu = move(make_unique<Computer1>(false));
       } else if(p2 == "computer2") {
         p2Valid = true;
-        // black = move(make_unique(cpu2));
+        blackCpu = move(make_unique<Computer2>(false));
       } else if(p2 == "computer3") {
         p2Valid = true;
         // black = move(make_unique(cpu3));
