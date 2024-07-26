@@ -14,10 +14,10 @@ public:
   Piece(const bool isWhite, const int point);
   virtual ~Piece() = default;
   virtual unique_ptr<Piece> clone() const = 0;
-  bool getIsWhite();
-  int getPoint();
-  virtual vector<vector<int>> getLegalMoves(vector<int> current, Board &board) = 0;
-  virtual bool isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) = 0;
+  bool getIsWhite() const;
+  int getPoint() const;
+  virtual vector<vector<int>> getLegalMoves(vector<int> current, const Board &board, bool checkForCheckmate) const = 0;
+  virtual bool isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool recursive) const = 0;
 };
 
 #endif

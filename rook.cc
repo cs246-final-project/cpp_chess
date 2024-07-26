@@ -10,7 +10,7 @@ unique_ptr<Piece> Rook::clone() const {
 }
 
 // get if the Rook has moved. If true, the Rook cannot castle
-bool Rook::getDidFirstMove() {
+bool Rook::getDidFirstMove() const {
   return didFirstMove;
 }
 
@@ -21,7 +21,7 @@ void Rook::setDidFirstMove() {
 
 // Check if the move is legal for the Rook
 // all current and to should be guaranteed to be in the board
-bool Rook::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recursive) {
+bool Rook::isMoveLegal(int x, int y, int toX, int toY, const Board &board, bool recursive) const {
   // false if the destination is same as current location
   if (x == toX && y == toY) return false;
   // false if the destination is not in the same row or column
@@ -51,7 +51,7 @@ bool Rook::isMoveLegal(int x, int y, int toX, int toY, Board &board, bool recurs
 
 // Get all the legal next moves for the Rook
 // current should be guaranteed to be in the board
-vector<vector<int>> Rook::getLegalMoves(vector<int> current, Board &board) {
+vector<vector<int>> Rook::getLegalMoves(vector<int> current, const Board &board, bool checkForCheckmate) const {
   vector<vector<int>> legalMoves;
   for (int sign = -1; sign <= 1; sign += 2) {
     // Check in the direction in the same columns
@@ -85,5 +85,16 @@ vector<vector<int>> Rook::getLegalMoves(vector<int> current, Board &board) {
       }
     }
   }
-  return legalMoves;
+  if (checkForCheckmate) {
+    return legalMoves;
+  }
+  vector<vector<int>> legalMovesWithoutCheck;
+  for (auto ele: legalMoves) {
+    Board temp = board;
+    temp.movePieceWithoutValidation(current[0], current[1], ele[0], ele[1]);
+    if (!temp.colorInCheck(this->getIsWhite())) {
+      legalMovesWithoutCheck.push_back(ele);
+    }
+  }
+  return legalMovesWithoutCheck;
 }

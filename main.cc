@@ -1,10 +1,13 @@
 #include "piece.h"
 #include "board.h"
 #include "view.h"
+#include "computer1.h"
 
 #include <iostream>
 #include <memory>
 #include <map>
+
+using namespace std;
 
 // cast string input to vector of int (position)
 vector<int> getInputPosition(string arg) {
@@ -40,8 +43,8 @@ int main() {
 
   unique_ptr<Board> board;
   unique_ptr<View> view = make_unique<View>(board.get());
-  // unique_ptr<Player> white;
-  // unique_ptr<Player> black;
+  unique_ptr<Computer> whiteCpu;
+  unique_ptr<Computer> blackCpu;
   
   string command;
   while(cin >> command){
@@ -54,7 +57,7 @@ int main() {
         // white = move(make_unique(human));
       } else if(p1 == "computer1") {
         p1Valid = true;
-        // white = move(make_unique(cpu1));
+        whiteCpu = move(make_unique<Computer1>(true));
       } else if(p1 == "computer2") {
         p1Valid = true;
         // white = move(make_unique(cpu2));
@@ -70,7 +73,7 @@ int main() {
         // black = move(make_unique(human));
       } else if(p2 == "computer1") {
         p2Valid = true;
-        // black = move(make_unique(cpu1));
+        blackCpu = move(make_unique<Computer1>(false));
       } else if(p2 == "computer2") {
         p2Valid = true;
         // black = move(make_unique(cpu2));
@@ -102,65 +105,91 @@ int main() {
       view->colourWins(!isWhiteTurn);
       isWhiteTurn = true;
       gameStart = false;
-    } else if(command == "move") {
-      string from, to;
-      cin >> from >> to;
+    } else if(command == "move" || "m") {
       if (!gameStart) {
         cout << "Game not started!" << endl;
+        cin.ignore(1000, '\n');
         continue;
       }
-      vector<vector<int>> pos = getInputMovePosition(from, to);
-      if (pos.empty()) {
-        cout << "Invalid input!" << endl;
-        continue;
-      }
-      if (board->pieceAt(pos[0][0], pos[0][1]) == nullptr){
-        cout << "Invalid Move! (No Piece at the Position!)" << endl;
-        continue;
-      } else if (board->pieceAt(pos[0][0], pos[0][1])->getIsWhite() != isWhiteTurn){
-        cout << "Invalid Move! (Not Your Piece)" << endl;
-        continue;
-      }
-      if (board->checkPromotion(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
-        // when promotion move
-        string promotion;
-        char promoChar;
-        cin >> promotion;
-        if (promotion.length() < 1) {
-          cout << "Need to specify promotion!" << endl;
-          continue;
+      if ((isWhiteTurn && whiteCpu) || (!isWhiteTurn && blackCpu)) {
+        vector<vector<int>> cpuMove;
+        if (isWhiteTurn && whiteCpu) {
+          cpuMove = whiteCpu->getMove(board->clone());
+        } else if (!isWhiteTurn && blackCpu) {
+          cpuMove = blackCpu->getMove(board->clone());
         }
-        if (promotion[0] >= 'a') {
-          promoChar = promotion[0] - ('a' - 'A');
+        if (cpuMove.size() == 0) {
+          cout << "computer has no valid move!" << endl;
         } else {
-          promoChar = promotion[0];
-        }
-        if (promoChar != 'Q' && promoChar != 'R' && promoChar != 'B' && promoChar != 'N'){
-          cout << "Invalid promotion input!" << endl;
-          continue;
-        }
-        vector<vector<int>> positions;
-        positions = board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1], promoChar);
-        if (positions.size() != 0){
-          view->update(positions);
-          isWhiteTurn = !isWhiteTurn;
-        } else {
-          cout << "Invalid Move!" << endl;
-          continue;
+          vector<vector<int>> positions;
+          positions = board->movePiece(cpuMove[0][0], cpuMove[0][1], cpuMove[1][0], cpuMove[1][1]);
+          if (positions.size() != 0){
+            view->update(positions);
+            isWhiteTurn = !isWhiteTurn;
+          } else {
+            cout << "Computer made invalid Move!" << endl;
+            cout << cpuMove[0][0] << "," << cpuMove[0][1] << "," << cpuMove[1][0] << "," << cpuMove[1][1] << endl;
+            continue;
+          }
         }
       } else {
-        // when normal move
-        vector<vector<int>> positions;
-        positions = board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1]);
-        if (positions.size() != 0){
-          view->update(positions);
-          isWhiteTurn = !isWhiteTurn;
-        } else {
-          cout << "Invalid Move!" << endl;
+        string from, to;
+        cin >> from >> to;
+        vector<vector<int>> pos = getInputMovePosition(from, to);
+        if (pos.empty()) {
+          cout << "Invalid input!" << endl;
           continue;
         }
+        if (board->pieceAt(pos[0][0], pos[0][1]) == nullptr){
+          cout << "Invalid Move! (No Piece at the Position!)" << endl;
+          continue;
+        } else if (board->pieceAt(pos[0][0], pos[0][1])->getIsWhite() != isWhiteTurn){
+          cout << "Invalid Move! (Not Your Piece)" << endl;
+          continue;
+        }
+        if (board->checkPromotion(pos[0][0], pos[0][1], pos[1][0], pos[1][1])){
+          // when promotion move
+          string promotion;
+          char promoChar;
+          cin >> promotion;
+          if (promotion.length() < 1) {
+            cout << "Need to specify promotion!" << endl;
+            continue;
+          }
+          if (promotion[0] >= 'a') {
+            promoChar = promotion[0] - ('a' - 'A');
+          } else {
+            promoChar = promotion[0];
+          }
+          if (promoChar != 'Q' && promoChar != 'R' && promoChar != 'B' && promoChar != 'N'){
+            cout << "Invalid promotion input!" << endl;
+            continue;
+          }
+          vector<vector<int>> positions;
+          positions = board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1], promoChar);
+          if (positions.size() != 0){
+            view->update(positions);
+            isWhiteTurn = !isWhiteTurn;
+          } else {
+            cout << "Invalid Move!" << endl;
+            continue;
+          }
+        } else {
+          // when normal move
+          vector<vector<int>> positions;
+          positions = board->movePiece(pos[0][0], pos[0][1], pos[1][0], pos[1][1]);
+          if (positions.size() != 0){
+            view->update(positions);
+            isWhiteTurn = !isWhiteTurn;
+          } else {
+            cout << "Invalid Move!" << endl;
+            continue;
+          }
+        }
       }
-      if(board->canMove(isWhiteTurn)){
+      cout << "1" << endl;
+      if(board->cantMove(isWhiteTurn)){
+        cout << "2" << endl;
         if(board->colorInCheck(isWhiteTurn)){
           isWhiteTurn ? ++blackPoints : ++whitePoints;
           view->colourWins(!isWhiteTurn);
@@ -173,6 +202,7 @@ int main() {
         }
         isWhiteTurn = true;
         gameStart = false;
+        isBoardCustom = false;
       }
     } else if(command == "setup"){
       if (gameStart) {
