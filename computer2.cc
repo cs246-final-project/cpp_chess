@@ -57,6 +57,7 @@ vector<vector<int>> Computer2::getMove(const Board &board) const {
   if (checkIndex.size() > 0 && maxScore == currentScore) {
     maxIndex = checkIndex;
   }
+  srand((unsigned int)time(NULL));
   vector<vector<int>> move = moves[maxIndex[rand() % maxIndex.size()]];
   return move;
 }

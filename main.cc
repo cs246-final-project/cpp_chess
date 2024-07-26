@@ -90,10 +90,10 @@ int main() {
           unique_ptr<Board> temp = make_unique<Board>();
           swap(board, temp);
           view = make_unique<View>(board.get());
+          view->displayBoard();
         } else {
           isBoardCustom = false;
         }
-        view->displayBoard();
         gameStart = true;
       } else {
         cout << "Not valid player" << endl;
@@ -111,7 +111,7 @@ int main() {
       view->colourWins(!isWhiteTurn);
       isWhiteTurn = true;
       gameStart = false;
-    } else if(command == "move" || "m") {
+    } else if(command == "move") {
       if (!gameStart) {
         cout << "Game not started!" << endl;
         cin.ignore(1000, '\n');
@@ -232,7 +232,7 @@ int main() {
           }
           switch(piece){ // make new piece based on input
             case 'p':
-              if (pos[1] == 0) {
+              if (pos[1] == 1) {
                 up = make_unique<Pawn>(false);
               } else {
                 up = make_unique<Pawn>(false, true);
@@ -262,7 +262,7 @@ int main() {
               }
               break;
             case 'P':
-              if (pos[1] == boardHeight - 1) {
+              if (pos[1] == boardHeight - 2) {
                 up = make_unique<Pawn>(true);
               } else {
                 up = make_unique<Pawn>(true, true);
@@ -310,7 +310,13 @@ int main() {
           view->update(vector<vector<int>>{pos});
         } else if(command == "="){
           cin >> arg;
-          arg == "white" ? isWhiteTurn = true : isWhiteTurn = false;
+          if (arg == "white" || arg == "WHITE") {
+            isWhiteTurn = true;
+          } else if (arg == "black" || arg == "BLACK") {
+            isWhiteTurn = false;
+          } else {
+            cout << "Invalid team" << endl;
+          }
         } else if(command == "done"){
           if(board->validBoard()){
             setupMode = false;

@@ -22,6 +22,7 @@ vector<vector<int>> Computer1::getMove(const Board &board) const {
   if (moves.size() == 0) {
     return {};
   }
+  srand((unsigned int)time(NULL));
   vector<vector<int>> move = moves[rand() % moves.size()];
   return move;
 }

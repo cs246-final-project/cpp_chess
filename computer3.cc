@@ -28,6 +28,7 @@ vector<vector<int>> Computer3::getMove(const Board &board) const {
         moves.push_back({pos, move});
         int secondMinPoint;
         int secondIndex = 0;
+        bool secondMoveEmpty = true;
         vector<vector<int>> secondPositions = (getIsWhite() ? tempBoard.getAliveBlack() : tempBoard.getAliveWhite());
         for (auto secondPos : secondPositions) {
           Piece* secondP = tempBoard.pieceAt(secondPos[0], secondPos[1]);
@@ -40,28 +41,28 @@ vector<vector<int>> Computer3::getMove(const Board &board) const {
               secondTempBoard.movePiece(secondPos[0], secondPos[1], secondMove[0], secondMove[1]);
             }
             int secondPoint = secondTempBoard.getPoint(getIsWhite());
-            if (secondIndex == 0) {
+            if (secondIndex == 0 || secondMoveEmpty) {
               secondMinPoint = secondPoint;
             } else if (secondMinPoint > secondPoint) {
               secondMinPoint = secondPoint;
+            } else {
             }
           }
-          if (secondPossibleMoves.size() == 0) {
-            secondMinPoint = tempBoard.getPoint(getIsWhite());
+          if (secondPossibleMoves.size() > 0) {
+            secondMoveEmpty = false;
           }
           ++secondIndex;
         }
-        if (secondIndex != 0) {
-          if (maxScore < secondMinPoint) {
-            maxScore = secondMinPoint;
-            maxIndex = {index};
-          } else if (maxScore == secondMinPoint) {
-            maxIndex.push_back(index);
-          }
+        if (secondMoveEmpty) {
+          secondMinPoint = tempBoard.getPoint(getIsWhite());
+        }
+        if (maxScore < secondMinPoint) {
+          maxScore = secondMinPoint;
+          maxIndex = {index};
+        } else if (maxScore == secondMinPoint) {
+          maxIndex.push_back(index);
         }
         ++index;
-      } else {
-        continue;
       }
       tempBoard = board;
     }
@@ -79,6 +80,7 @@ vector<vector<int>> Computer3::getMove(const Board &board) const {
       }
     }
   }
+  srand((unsigned int)time(NULL));
   vector<vector<int>> move = moves[maxIndex[rand() % maxIndex.size()]];
   return move;
 }

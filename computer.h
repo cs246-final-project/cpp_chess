@@ -2,6 +2,7 @@
 #define COMPUTER_H
 
 #include "board.h"
+#include <ctime>
 
 class Computer {
   bool isWhite;

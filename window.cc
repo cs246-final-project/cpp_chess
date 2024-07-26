@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <png.h>
 #include <memory>
+#include <vector>
 #include "window.h"
 
 using namespace std;
@@ -89,7 +90,7 @@ void Xwindow::drawTile(int r, int c, string piece, bool isWhite){
   int height = png_get_image_height(png_ptr, info_ptr);
   png_bytep* row_pointers = png_get_rows(png_ptr, info_ptr);
   
-  char* data = (char*) malloc(width * height * 4);
+  vector<char> data(width * height * 4);
 
   for (int y = 0; y < height; y++) {
     png_bytep row = row_pointers[y];
@@ -102,10 +103,11 @@ void Xwindow::drawTile(int r, int c, string piece, bool isWhite){
       data[(y * width + x) * 4 + 0] = (px[0] < 50 ? (isWhite ? 255 : 0) : ((r+c)%2 != 0 ? 100 : 206));  // B
     }
   }
-  XImage *ximg = XCreateImage(d, DefaultVisual(d, 0), 24, ZPixmap, 0, data, width, height, 32, 0);
+  XImage *ximage = XCreateImage(d, DefaultVisual(d, 0), 24, ZPixmap, 0, data.data(), width, height, 32, 0);
+
   GC gc = XCreateGC(d, w, 0, NULL);
-  XPutImage(d, w, gc, ximg, 0, 0, r*60, c*60, width, height);
-  XDestroyImage(ximg);
+  XPutImage(d, w, gc, ximage, 0, 0, r*60, c*60, width, height);
+  XFree(ximage);
   XFreeGC(d, gc);
   png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
   png_destroy_info_struct(png_ptr, &info_ptr);

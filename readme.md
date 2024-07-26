@@ -24,11 +24,9 @@ Game Commands:
     ```game human computer1```
 
   Make a Move.
-    Use move command to move. For computer's turn, just put move or m. For human's turn, put move command followed by position of current and destination. If it is a promotion move, also add type to promote. Valid promotions are 'Q', 'R', 'K', 'B'.
+    Use move command to move. For computer's turn, just put move. For human's turn, put move command followed by position of current and destination. If it is a promotion move, also add type to promote. Valid promotions are 'Q', 'R', 'K', 'B'.
     ```move```
-    ```m```
     ```move e2 e4```
-    ```m E2 E4```
     ```move e2 e4 Q```
 
   Resign
