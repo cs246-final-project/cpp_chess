@@ -30,7 +30,8 @@ class Board {
 	vector<vector<int>> aliveWhite;
 	vector<vector<int>> aliveBlack;
 	History history;
-	
+	void removePieceFromAlive(int x, int y);
+	void addPieceToAlive(int x, int y);
 
 	public:
 		Board(bool empty = false);
@@ -60,8 +61,6 @@ class Board {
 
 		void place(unique_ptr<Piece> p, int posx, int posy);
 		void remove(int posx, int posy);
-		void removePieceFromAlive(int x, int y);
-		void addPieceToAlive(int x, int y);
 
 		vector<vector<int>> lastMove() const;
 
