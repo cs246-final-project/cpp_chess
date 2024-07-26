@@ -125,3 +125,20 @@ vector<vector<int>> King::getLegalMoves(vector<int> current, const Board &board,
   }
   return legalMovesWithoutCheck;
 }
+
+vector<vector<int>> King::getCaptureMoves(vector<int> current, const Board &board) const {
+  vector<vector<int>> legalMoves;
+  for (int i = -1; i <= 1; ++i) {
+    for (int j = -1; j <= 1; ++j) {
+      // skip the current position
+      if (i == 0 && j == 0) continue;
+      int newX = current[0] + i;
+      int newY = current[1] + j;
+      if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8) continue;
+      if (board.pieceAt(newX, newY) != nullptr && board.pieceAt(newX, newY)->getIsWhite() != this->getIsWhite()) {
+        legalMoves.push_back({newX, newY});
+      }
+    }
+  }
+  return legalMoves;
+}
