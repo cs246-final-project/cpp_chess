@@ -7,6 +7,7 @@ View::View(Board *board) : board{board}{
 // display the entire board
 void View::displayBoard(){
   for(int i = 0; i < boardHeight; i++){
+    cout << 8 - i << " ";
     for(int j = 0; j < boardWidth; j++){
       int posX = j*60;
       int posY = i*60;
@@ -31,6 +32,7 @@ void View::displayBoard(){
     }
     cout << endl;
   }
+  cout << "  abcdefgh" << endl;
 }
 
 // update the board only for the given coordinates
