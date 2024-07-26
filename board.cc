@@ -155,6 +155,9 @@ vector<vector<int>> Board::movePiece (int x, int y, int toX, int toY){
   if (pieceAt(x,y)->isMoveLegal(x, y, toX, toY, *this, false)){
     if (pieceAt(toX, toY) != nullptr){
       remove(toX, toY);
+    } else if (dynamic_cast<Pawn*>(pieceAt(x, y)) != nullptr && abs(x - toX) > 0 && pieceAt(toX, toY) == nullptr){
+      remove(toX, y);
+      changedPositions.push_back({toX, y});
     }
     removePieceFromAlive(x, y);
     board[toY][toX] = move(board[y][x]);
@@ -221,6 +224,8 @@ vector<vector<int>> Board::movePiece (int x, int y, int toX, int toY, char promo
 void Board::movePieceWithoutValidation(int x, int y, int toX, int toY) {
   if (pieceAt(toX, toY) != nullptr){
     remove(toX, toY);
+  } else if (dynamic_cast<Pawn*>(pieceAt(x, y)) != nullptr && abs(x - toX) > 0 && pieceAt(toX, toY) == nullptr){
+    remove(toX, y);
   }
   removePieceFromAlive(x, y);
   board[toY][toX] = move(board[y][x]);

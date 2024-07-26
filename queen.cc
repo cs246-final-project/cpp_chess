@@ -120,3 +120,43 @@ vector<vector<int>> Queen::getLegalMoves(vector<int> current, const Board &board
   }
   return legalMovesWithoutCheck;
 }
+
+vector<vector<int>> Queen::getCaptureMoves(vector<int> current, const Board &board) const {
+  vector<vector<int>> legalMoves;
+  // Check in the direction in the same columns and rows (like a rook)
+    for (int sign = -1; sign <= 1; sign += 2) {
+    // Check in the direction in the same columns
+    for (int k = 1; k < 8; ++k) {
+      int newX = current[0] + k * sign;
+      if (newX < 0 || newX >= 8) break;
+      if (board.pieceAt(newX, current[1]) != nullptr && board.pieceAt(newX, current[1])->getIsWhite() != this->getIsWhite()){
+        legalMoves.push_back({newX, current[1]});
+        break;
+      }
+    }
+    // Check in the direction in the same rows
+    for (int k = 1; k < 8; ++k) {
+      int newY = current[1] + k * sign;
+      if (newY < 0 || newY >= 8) break;
+      if (board.pieceAt(current[0], newY) != nullptr && board.pieceAt(current[0], newY)->getIsWhite() != this->getIsWhite()) {
+        legalMoves.push_back({current[0], newY});
+        break;
+      }
+    }
+  }
+  // Check in the direction in the diagonals (like a bishop)
+  for (int xSign = -1; xSign <= 1; xSign += 2) {
+    for (int ySign = -1; ySign <= 1; ySign += 2) {
+      for (int k = 1; k < 8; ++k) {
+        int newX = current[0] + k * xSign;
+        int newY = current[1] + k * ySign;
+        if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8) break;
+        if (board.pieceAt(newX, newY) != nullptr && board.pieceAt(newX, newY)->getIsWhite() != this->getIsWhite()) {
+          legalMoves.push_back({newX, newY});
+          break;
+        }
+      }
+    }
+  }
+  return legalMoves;
+}

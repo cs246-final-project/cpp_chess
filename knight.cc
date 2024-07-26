@@ -58,3 +58,22 @@ vector<vector<int>> Knight::getLegalMoves(vector<int> current, const Board &boar
   }
   return legalMovesWithoutCheck;
 }
+
+vector<vector<int>> Knight::getCaptureMoves(vector<int> current, const Board &board) const {
+  vector<vector<int>> legalMoves;
+  for (int i = -2; i <= 2; i += 4) {
+    for (int j = -1; j <= 1; j += 2) {
+      if (current[0] + i >= 0 && current[0] + i < 8 && current[1] + j >= 0 && current[1] + j < 8) {
+        if (board.pieceAt(current[0] + i, current[1] + j) != nullptr && board.pieceAt(current[0] + i, current[1] + j)->getIsWhite() != this->getIsWhite()) {
+          legalMoves.push_back({current[0] + i, current[1] + j});
+        }
+      }
+      if (current[0] + j >= 0 && current[0] + j < 8 && current[1] + i >= 0 && current[1] + i < 8) {
+        if (board.pieceAt(current[0] + j, current[1] + i) != nullptr && board.pieceAt(current[0] + j, current[1] + i)->getIsWhite() != this->getIsWhite()) {
+          legalMoves.push_back({current[0] + j, current[1] + i});
+        }
+      }
+    }
+  }
+  return legalMoves;
+}
