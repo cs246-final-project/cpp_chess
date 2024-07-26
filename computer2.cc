@@ -26,6 +26,7 @@ vector<vector<int>> Computer2::getMove(const Board &board) const {
     return {};
   }
   int maxScore;
+  int currentScore = board.getPoint(getIsWhite());
   vector<int> maxIndex;
   vector<int> checkIndex;
   int index = 0;
@@ -52,7 +53,7 @@ vector<vector<int>> Computer2::getMove(const Board &board) const {
     }
     ++index;
   }
-  if (checkIndex.size() > 0) {
+  if (checkIndex.size() > 0 && maxScore == currentScore) {
     maxIndex = checkIndex;
   }
   vector<vector<int>> move = moves[maxIndex[rand() % maxIndex.size()]];

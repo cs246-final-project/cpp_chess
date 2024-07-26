@@ -3,6 +3,7 @@
 #include "view.h"
 #include "computer1.h"
 #include "computer2.h"
+#include "computer3.h"
 
 #include <iostream>
 #include <memory>
@@ -55,7 +56,6 @@ int main() {
       cin >> p1 >> p2;
       if(p1 == "human"){
         p1Valid = true;
-        // white = move(make_unique(human));
       } else if(p1 == "computer1") {
         p1Valid = true;
         whiteCpu = move(make_unique<Computer1>(true));
@@ -64,10 +64,10 @@ int main() {
         whiteCpu = move(make_unique<Computer2>(true));
       } else if(p1 == "computer3") {
         p1Valid = true;
-        // white = move(make_unique(cpu3));
+        whiteCpu = move(make_unique<Computer3>(true));
       } else if(p1 == "computer4") {
         p1Valid = true;
-        // white = move(make_unique(cpu4));
+        // whiteCpu = move(make_unique<Computer4>(true));
       }
       if(p2 == "human"){
         p2Valid = true;
@@ -80,10 +80,10 @@ int main() {
         blackCpu = move(make_unique<Computer2>(false));
       } else if(p2 == "computer3") {
         p2Valid = true;
-        // black = move(make_unique(cpu3));
+        blackCpu = move(make_unique<Computer3>(false));
       } else if(p2 == "computer4") {
         p2Valid = true;
-        // black = move(make_unique(cpu4));
+        // blackCpu = move(make_unique<Computer4>(false));
       }
       if (p1Valid && p2Valid) {
         if(!isBoardCustom){

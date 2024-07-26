@@ -69,3 +69,21 @@ vector<vector<int>> Bishop::getLegalMoves(vector<int> current, const Board &boar
   }
   return legalMovesWithoutCheck;
 }
+
+vector<vector<int>> Bishop::getCaptureMoves(vector<int> current, const Board &board) const {
+  vector<vector<int>> legalMoves;
+  for (int xSign = -1; xSign <= 1; xSign += 2) {
+    for (int ySign = -1; ySign <= 1; ySign += 2) {
+      for (int k = 1; k < 8; ++k) {
+        int newX = current[0] + k * xSign;
+        int newY = current[1] + k * ySign;
+        if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8) break;
+        if (board.pieceAt(newX, newY) != nullptr && board.pieceAt(newX, newY)->getIsWhite() != this->getIsWhite()) {
+          legalMoves.push_back({newX, newY});
+          break;
+        }
+      }
+    }
+  }
+  return legalMoves;
+}
