@@ -66,6 +66,7 @@ class Board {
 		vector<vector<int>> lastMove() const;
 
 		bool willCheck(vector<int> from, vector<int> to) const;
+		int getPoint(bool isWhite) const;
 };
 
 #endif
