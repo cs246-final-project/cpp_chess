@@ -54,6 +54,7 @@ void View::update(vector<vector<int>> coords){
     }
   }
   for(int i = 0; i < boardHeight; i++){
+    cout << 8 - i << " ";
     for(int j = 0; j < boardWidth; j++){
       Piece* p = board->pieceAt(j, i);
       if(p == nullptr){
@@ -65,6 +66,7 @@ void View::update(vector<vector<int>> coords){
     }
     cout << endl;
   }
+  cout << "  abcdefgh" << endl;
 }
 
 // display the winning message
