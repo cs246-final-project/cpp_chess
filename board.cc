@@ -112,7 +112,7 @@ bool Board::cantMove(bool isWhite) const {
     Piece* p = pieceAt(pos[0], pos[1]);
     vector<vector<int>> possibleMoves = p->getLegalMoves(pos, tempBoard, true);
     for(auto move : possibleMoves){
-      tempBoard.movePiece(pos[0], pos[1], move[0], move[1]);
+      tempBoard.movePieceWithoutValidation(pos[0], pos[1], move[0], move[1]);
       if(!(tempBoard.colorInCheck(isWhite))){
         return false;
       }
